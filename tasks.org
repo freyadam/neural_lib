@@ -1,0 +1,13 @@
+* Code
+** build base structure of net, op, block
+** find orderings
+* Tests 
+* Building
+** create repo on bitbucket
+** create task for all tests
+** create task for building of all externals
+** create task for documentation
+* Documentation
+* Solvers 
+** SGD
+** Nesterov gradient descent

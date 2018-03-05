@@ -1,0 +1,12 @@
+# binaries
+*
+!*.*
+!*/
+
+# object files
+*.o
+
+# images
+*.png
+*.jpg
+*.jpeg
