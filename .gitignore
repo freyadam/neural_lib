@@ -10,3 +10,6 @@
 *.png
 *.jpg
 *.jpeg
+
+# don't commit documentation
+doc/*
