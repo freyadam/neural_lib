@@ -15,3 +15,11 @@ The precise usage depends on the usage. By default, project is compiled as a dyn
 ## Tests
 
 This project is using the Google Test framework.
+
+```bash
+cd extern/googletest
+mkdir lib
+cd lib
+cmake ..
+make
+```
