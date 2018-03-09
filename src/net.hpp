@@ -5,18 +5,15 @@
 #include <vector>
 #include <memory>
 
-#include "op.h"
-#include "blocks.h"
+#include "op.hpp"
+#include "blocks.hpp"
 
 namespace nl {
 
 	class Net {	
 
 		std::shared_ptr<block> add_block(std::string name) {
-			block_ptr new_block = make_shared<Block>();
-
-			
-
+			block_ptr new_block = make_shared<Block>();		   
 		}
 
 		std::shared_ptr<op> add_op(std::string name) {

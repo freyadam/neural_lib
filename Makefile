@@ -7,22 +7,27 @@ EXT=extern
 SOURCES=$(wildcard $(SRC)/*.cpp)
 HEADERS=$(wildcard $(SRC)/*.hpp)
 OBJECTS=$(SOURCES:$(SRC)/%.cpp=$(OBJ)/%.o)
-TARGET=$(BIN)/neural_lib
+MAIN=$(BIN)/main
+LIB=$(BIN)/libneural.so
 
 CC=g++
-CFLAGS=--std=c++14 -Wall -O2
+CFLAGS=--std=c++14 -Wall -O2 -fPIC
 LDFLAGS=
 
-.PHONY=all run clean
+.PHONY=all run clean doc
 
-all: $(TARGET)
+all: $(LIB) $(MAIN)
 
-$(TARGET): $(OBJECTS)
-	@mkdir $(BIN)
-	$(CC) $^ $(LDFLAGS) -o $@
+$(LIB): $(filter-out $(OBJ)/main.o, $(OBJECTS))
+	@mkdir -p $(BIN)
+	$(CC) $(CFLAGS) $(LDFLAGS) -shared $^ -o $@
+
+$(MAIN): $(OBJ)/main.o
+	@mkdir -p $(BIN)
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@  -Lbin -lneural
 
 $(OBJECTS): $(OBJ)/%.o : $(SRC)/%.cpp
-	@mkdir $(OBJ)
+	@mkdir -p $(OBJ)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run: all
@@ -33,6 +38,7 @@ clean:
 	rm -f $(TARGET)
 	rm -rf doc
 
-documentation:
-	@mkdir doc
+doc:
+	@mkdir -p doc
 	doxygen doxygen_config
+

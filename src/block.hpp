@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "op.h"
+#include "op.hpp"
 
 namespace nl {
 
@@ -13,8 +13,6 @@ namespace nl {
 
 
 	};
-
-	typedef std::shared_ptr<Block> block_ptr;
 
 } // namespace nl
 

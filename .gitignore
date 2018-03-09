@@ -13,3 +13,9 @@
 
 # don't commit documentation
 doc/*
+
+# allow Makefile
+!Makefile
+
+# allow doxygen config file
+!doxygen_config
