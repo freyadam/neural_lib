@@ -6,6 +6,9 @@
 
 #include "block.hpp"
 
+// resolve circular dependency
+class Block;
+
 namespace nl {
 
 	class Op {
@@ -14,7 +17,6 @@ namespace nl {
         Op() {
             // created blocks will be destroyed in destructor
             delete_owned = true;
-
         }
 
         /// Destructor. Among other things, it can delete owned blocks.
@@ -24,10 +26,13 @@ namespace nl {
         /// Forward pass of the computational operation. Depends on input blocks.
         /// Modifies output blocks. 
         ///
-        void forward() {}
-        
-        /// Backward pass of the computational operation
-        void backward() {}
+        virtual void forward() = 0;
+            
+        ///
+        /// Backward pass of the computational operation. Propagates gradient to
+        /// input blocks.
+        ///
+        virtual void backward() = 0;
 
         /// 
         /// Set to false if you don't want blocks created by this function 

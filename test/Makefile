@@ -22,7 +22,7 @@ USER_DIR = .
 # Flags passed to the preprocessor.
 # Set Google Test's header directory as a system directory, such that
 # the compiler doesn't generate warnings in Google Test headers.
-CPPFLAGS += -isystem $(GTEST_DIR)/include
+CPPFLAGS += -isystem $(GTEST_DIR)/include -I../extern
 
 # Flags passed to the C++ compiler.
 CXXFLAGS += -g -std=c++14 -Wall -Wextra -pthread

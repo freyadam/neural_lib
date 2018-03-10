@@ -1,19 +1,19 @@
 
 #include <iostream>
 
+#include <Eigen/unsupported/CXX11/Tensor>
+
 #include "op.hpp"
 #include "block.hpp"
 #include "graph.hpp"
+#include "perceptron.hpp"
 
 using namespace std;
-
 
 int main(int argc, char *argv[])
 {
 
-    nl::Graph g;
+    nl::Perceptron p("test", 1, 2, 3, 4, 5);
 
-    std::cout << "I have no mouth but I have to scream." << std::endl;
-      
     return 0;
 }

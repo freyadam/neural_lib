@@ -10,8 +10,10 @@ OBJECTS=$(SOURCES:$(SRC)/%.cpp=$(OBJ)/%.o)
 MAIN=$(BIN)/main
 LIB=$(BIN)/libneural.so
 
+EIGEN_PATH=./extern
+
 CC=g++
-CFLAGS=--std=c++14 -Wall -O2 -fPIC
+CFLAGS=--std=c++14 -Wall -O2 -fPIC -I$(EIGEN_PATH)
 LDFLAGS=
 
 .PHONY: all run clean doc test
@@ -26,12 +28,12 @@ $(MAIN): $(OBJ)/main.o
 	@mkdir -p $(BIN)
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@  -Lbin -lneural
 
-$(OBJECTS): $(OBJ)/%.o : $(SRC)/%.cpp $(SRC)/%.hpp
+$(OBJECTS): $(OBJ)/%.o : $(SRC)/%.cpp $(wildcard $(SRC)/*.hpp)
 	@mkdir -p $(OBJ)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run: all
-	./$(TARGET)
+	LD_LIBRARY_PATH=bin ./$(MAIN)
 
 clean:
 	$(foreach object,$(OBJECTS), rm -f $(object)${\n})
