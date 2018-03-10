@@ -7,7 +7,7 @@ namespace nl {
     /// Exception thrown in the case no topological ordering was possible
     /// on an oriented graph. Generally that means there is a cycle present.
     /// 
-    struct TopogicalException : public std::exception {
+    struct TopologicalException : public std::exception {
         const char * what() const throw () {
             return "Topological order could not be created.";
         }

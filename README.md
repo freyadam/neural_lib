@@ -16,6 +16,8 @@ The precise usage depends on the usage. By default, project is compiled as a dyn
 
 This project is using the Google Test framework.
 
+Build using the commands:
+
 ```bash
 cd extern/googletest
 mkdir lib
@@ -23,3 +25,9 @@ cd lib
 cmake ..
 make
 ```
+
+Alternativelly if you have the framework already installed on your computer, you can just use it by redefining the `GTEST_DIR` variable in `test/Makefile`.
+
+## Documentation
+
+Source code is annotated with the Doxygen-style comments. Doxygen documentation can be created with `make doc`. Result can be then found in the `doc` directory.
