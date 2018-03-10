@@ -73,8 +73,8 @@ gtest_main.a : gtest-all.o gtest_main.o
 # Actual tests. A test should link with either gtest.a or
 # gtest_main.a, depending on whether it defines its own main()
 # function.
-test.o : $(USER_DIR)/test.cpp $(GTEST_HEADERS)
+test.o : $(USER_DIR)/test.cpp $(GTEST_HEADERS) $(wildcard *.hpp)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/test.cpp -I../src
 
-test_binary : test.o gtest_main.a
+test_binary : test.o gtest_main.a 
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@ -L../bin -lneural

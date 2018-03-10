@@ -4,7 +4,6 @@
 #include "graph.hpp"
 
 void nl::Graph::visit(Vertex & v, vector<Vertex *> & vect) {
-    std::cout << v.name << " " << v.mark << std::endl;
 
     // return immediately if vertex is already in the vector
     if (v.mark == Mark::VISITED)
@@ -18,7 +17,6 @@ void nl::Graph::visit(Vertex & v, vector<Vertex *> & vect) {
 
     // visit all successors
     for (auto succ : v.outgoing) {
-        std::cout << "recurse" << std::endl;
         visit(*succ, vect);   
     }
         
@@ -79,7 +77,7 @@ vector<string> nl::Graph::get_ordering() {
         // all vertices must be marked NONE or VISITED when 
         // search is not running
         assert(vertex_it.second.mark != Mark::CURRENT);
-        std::cout << "new" << std::endl;
+
         if (vertex_it.second.mark == Mark::NONE)
             visit(vertex_it.second, order);
     }
