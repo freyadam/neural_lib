@@ -14,7 +14,7 @@ namespace nl {
 	class Op {
     public:
 
-        Op() {
+        Op(std::string name): name(name) {
             // created blocks will be destroyed in destructor
             delete_owned = true;
         }
@@ -43,11 +43,12 @@ namespace nl {
         }
 
         /// Blocks that are taken into account but not modified during forward pass
-        std::unordered_map<std::string, Block *> inputs;
-        /// Blocks that are modified during forward pass
-        std::unordered_map<std::string, Block *> outputs;
+        virtual std::unordered_map<std::string, Block *> inputs() = 0;
 
-    private:
+        /// Blocks that are modified during forward pass
+        virtual std::unordered_map<std::string, Block *> outputs() = 0;
+
+    protected:
         ///
         /// Name of the operation. It needs to be unique within a network 
         /// as it is used as an identifier,

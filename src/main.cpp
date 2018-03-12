@@ -6,14 +6,15 @@
 #include "op.hpp"
 #include "block.hpp"
 #include "graph.hpp"
-#include "perceptron.hpp"
+#include "neuron.hpp"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
 
-    nl::Perceptron p("test", 1, 2, 3, 4, 5);
+    nl::Block b("block", 1, 1, 1);
+    nl::Neuron n("test", &b);
 
     return 0;
 }

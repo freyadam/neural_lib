@@ -23,6 +23,17 @@ namespace nl {
         }
     };
 
+    /// 
+    /// Dimensions were not compatible. This may for example happen
+    /// when Op is accepting only input of certain dimension and 
+    /// provided block does not fit these parameters.
+    ///
+    struct DimensionException : public std::exception {
+        const char * what() const throw () {
+            return "Dimension mismatch.";
+        }
+    };
+
 }
 
 #endif // NEURAL_LIB_EXCEPTIONS_H
