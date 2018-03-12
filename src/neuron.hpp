@@ -1,8 +1,11 @@
-#ifndef NEURAL_LIB_PERCEPTRON_H
-#define NEURAL_LIB_PERCEPTRON_H
+#ifndef NEURAL_LIB_NEURON_H
+#define NEURAL_LIB_NEURON_H
 
 #include <vector>
 #include <unordered_map>
+
+#include "op.hpp"
+#include "transfer_fns.hpp"
 
 namespace nl {
 
@@ -10,7 +13,7 @@ namespace nl {
     public:
         
         Neuron(std::string name, std::vector<Block *> inputs):
-        Op(name) {
+            Op(name), transfer_fn(TransferFns::get("sigmoid")) {                        
 
             // check that all inputs are distinct
             
@@ -27,23 +30,22 @@ namespace nl {
 
             // create output block
             output = new Block(name + "_out",
-                                      1, 1, 1);
+                               1, 1, 1);
 
             /// output becomes "owned" so it may be properly deleted
             owned.push_back(output);
            
             // create weights and thresholds                        
-            
+
         }
 
         Neuron(std::string name, Block* input):
-        Op(name) {                        
-
+            Op(name), transfer_fn(TransferFns::get("sigmoid")) {                        
         }
 
         template<typename... Args>
         Neuron(std::string name, Block* input, Args... args):
-        Neuron(name, args...) {
+            Neuron(name, args...) {
             
         }
 
@@ -79,10 +81,11 @@ namespace nl {
         std::vector<Block*> weights;
         /// Threshold value.
         float threshold;        
-
+        /// Transfer function reference
+        TransferFn& transfer_fn;
     };
 
 
 } // namespace nl
 
-#endif // NEURAL_LIB_PERCEPTRON_H
+#endif // NEURAL_LIB_NEURON_H

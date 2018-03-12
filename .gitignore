@@ -14,6 +14,12 @@
 # don't commit documentation
 doc/*
 
+# don't commit extern
+extern/*
+
+# don't commit bin dir
+bin
+
 # allow Makefile
 !Makefile
 
