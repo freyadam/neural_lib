@@ -43,10 +43,10 @@ namespace nl {
         }
 
         /// Blocks that are taken into account but not modified during forward pass
-        virtual std::unordered_map<std::string, Block *> inputs() = 0;
+        virtual block_map inputs() = 0;
 
         /// Blocks that are modified during forward pass
-        virtual std::unordered_map<std::string, Block *> outputs() = 0;
+        virtual block_map outputs() = 0;
 
     protected:
         ///

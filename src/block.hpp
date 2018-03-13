@@ -59,6 +59,8 @@ namespace nl {
         Eigen::Tensor<float,3> gradient;
 
 	};
+   
+    typedef std::unordered_map<std::string, Block *> block_map;    
 
 } // namespace nl
 

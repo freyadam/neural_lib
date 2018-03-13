@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_map>
 
+#include "random.hpp"
 #include "op.hpp"
 #include "transfer_fns.hpp"
 
@@ -11,74 +12,70 @@ namespace nl {
 
     class Neuron : public Op {
     public:
-        
-        Neuron(std::string name, std::vector<Block *> inputs):
-            Op(name), transfer_fn(TransferFns::get("sigmoid")) {                        
 
-            // check that all inputs are distinct
-            
-            // insert inputs to input list
-            for (auto & input : inputs) {
+        // TBD check that all inputs, including weights, have distinct names
 
-                // check that all inputs are of correct dimension
-                auto dims = input->dimensions();
-                if (dims[0] != 1 || dims[1] != 1 || dims[2] != 1)
-                    throw DimensionException();
+        /// Constructor.
+        /// @param name name of the resulting neuron
+        /// @param fn_name name of used transfer function as defined in TransferFns
+        /// @param inputs vector of input blocks
+        Neuron(std::string name, std::string fn_name, std::vector<Block *> inputs);
 
-                previous.push_back(input);
-            }
+        /// Constructor.
+        /// @param name name of the resulting neuron
+        /// @param fn_name name of used transfer function as defined in TransferFns
+        /// @param input input block
+        Neuron(std::string name, std::string fn_name, Block* input);
 
-            // create output block
-            output = new Block(name + "_out",
-                               1, 1, 1);
-
-            /// output becomes "owned" so it may be properly deleted
-            owned.push_back(output);
-           
-            // create weights and thresholds                        
-
-        }
-
-        Neuron(std::string name, Block* input):
-            Op(name), transfer_fn(TransferFns::get("sigmoid")) {                        
-        }
-
+        /// Constructor.
+        /// @param name name of the resulting neuron
+        /// @param fn_name name of used transfer function as defined in TransferFns
+        /// @param input input block
+        /// @param args rest of the blocks
         template<typename... Args>
-        Neuron(std::string name, Block* input, Args... args):
-            Neuron(name, args...) {
-            
+        Neuron(std::string name, std::string fn_name, Block* input, Args... args):
+            Neuron(name, fn_name, args...) {
+
+            // check that input is of correct dimension
+            auto dims = input->dimensions();
+            if (dims[0] != 1 || dims[1] != 1 || dims[2] != 1 ||
+                dims.size() != 3)
+                throw DimensionException();
+
+            // insert block and appropriate weight to vector
+            InputPair ip;                
+            Block* weight = new Block(input->name + "_w", 1, 1, 1);
+            weight->data(0,0,0) = Generator::get();
+
+            ip.input = input;
+            ip.weight = weight;
+            input_vector.push_back(ip);
+
+            // created weights need to be deleted in the end
+            owned.push_back(weight);                        
         }
 
-        virtual void forward() {}
+
+        virtual void forward();
 
         virtual void backward() {}
 
-        virtual std::unordered_map<std::string, Block *> outputs() {
-            std::unordered_map<std::string, Block*> map;
+        virtual block_map outputs();
 
-            map.insert(std::pair<std::string, Block*>(output->name,
-                                                      output));
-            
-            return std::move(map);                                          
-        }
-
-        virtual std::unordered_map<std::string, Block *> inputs() {
-            std::unordered_map<std::string, Block*> map;
-            return std::move(map);                      
-        }
+        virtual block_map inputs();
 
     private:
 
+        /// Input block and weight pair
+        struct InputPair {
+            Block* input; /// input from previous layer
+            Block* weight; /// corresponding weight
+        };
+        /// All pairs input/weight used in this neuron
+        std::vector<InputPair> input_vector;        
+
         /// Block in which result of Neuron::forward() is stored.
         Block* output;
-        /// Input blocks.
-        std::vector<Block*> previous;
-        ///
-        /// Weight blocks applied to all inputs. 
-        /// Same order of inputs as the "previous" vector. So weights[0] 
-        /// corresponds to previous[0], weights[1] to previous[1] etc.
-        /// 
-        std::vector<Block*> weights;
         /// Threshold value.
         float threshold;        
         /// Transfer function reference
