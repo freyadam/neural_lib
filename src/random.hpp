@@ -12,8 +12,7 @@ namespace nl {
         static float get() {
             return uniform(gen);
         }
-    private:
-        static std::default_random_engine gen;
+        static std::random_device gen;
         static std::uniform_real_distribution<float> uniform;
     };
 }

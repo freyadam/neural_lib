@@ -28,15 +28,21 @@ namespace nl {
             owned.push_back(weight);
         }
 
+        // create threshold block
+        threshold = new Block(name + "_thr", 
+                              1,1,1);
+        // set original threshold
+        threshold->data(0,0,0) = Generator::get();
+        
+        /// output becomes "owned" so it may be properly deleted
+        owned.push_back(threshold);
+
         // create output block
         output = new Block(name + "_out",
                            1, 1, 1);
 
         /// output becomes "owned" so it may be properly deleted
-        owned.push_back(output);
-            
-        // set original threshold
-        threshold = Generator::get();
+        owned.push_back(output);           
     }
 
     Neuron::Neuron(std::string name, std::string fn_name, Block* input):
@@ -60,30 +66,50 @@ namespace nl {
         // created weights need to be deleted in the end
         owned.push_back(weight);                        
 
+        // create threshold block
+        threshold = new Block(name + "_thr", 
+                              1,1,1);
+        // set original threshold
+        threshold->data(0,0,0) = Generator::get();
+        
+        /// output becomes "owned" so it may be properly deleted
+        owned.push_back(threshold);
+
         // create output block
         output = new Block(name + "_out",
                            1, 1, 1);
-
         /// output becomes "owned" so it may be properly deleted
-        owned.push_back(output);
-            
-        // set original threshold
-        threshold = Generator::get();
-            
+        owned.push_back(output);    
+        
     }
 
     void Neuron::forward() {
-        float x = 0;
-            
+        Eigen::Tensor<float, 3> x(1,1,1);
+        x(0,0,0) = 0;
+
         for (auto & p : input_vector) {
-            Eigen::Tensor<float, 3> r = p.input->data * p.weight->data;                
-            x += r(0,0,0);
+            x += p.input->data * p.weight->data;                
         }
 
-        x -= threshold;
+        x += threshold->data;
 
-        output->data(0,0,0) = x;
-        // output->data(0,0,0) = transfer_fn.forward(x);
+        output->data = x;
+        // output->data(0,0,0) = transfer_fn.forward(x); // TODO
+    }
+
+    void Neuron::backward() {
+        Eigen::Tensor<float, 3> grad = 
+            output->gradient * transfer_fn.backward(output->data(0,0,0));
+                                           
+        for (auto & p : input_vector) {    
+            // propagate gradient to input block 
+            p.input->gradient += grad * p.weight->data;
+            // propagate gradient to input block 
+            p.input->gradient += grad * p.input->data;
+        }
+        
+        // propagate gradient to threshold block
+        threshold->gradient += grad;        
     }
 
     block_map Neuron::outputs() {

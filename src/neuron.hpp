@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <unordered_map>
+#include <iostream>
 
 #include "random.hpp"
 #include "op.hpp"
@@ -58,7 +59,7 @@ namespace nl {
 
         virtual void forward();
 
-        virtual void backward() {}
+        virtual void backward();
 
         virtual block_map outputs();
 
@@ -77,7 +78,7 @@ namespace nl {
         /// Block in which result of Neuron::forward() is stored.
         Block* output;
         /// Threshold value.
-        float threshold;        
+        Block* threshold;        
         /// Transfer function reference
         TransferFn& transfer_fn;
     };

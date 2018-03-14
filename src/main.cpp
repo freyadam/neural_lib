@@ -30,13 +30,13 @@ int main(int argc, char *argv[])
     b1.data(0,0,0) = 1;
     n.forward();
 
-    float w1 = out->data(0,0,0) +  thr;
+    float w1 = out->data(0,0,0) - thr;
 
     b1.data(0,0,0) = 0;
     b2.data(0,0,0) = 1;    
     n.forward();
 
-    float w2 = out->data(0,0,0) +  thr;
+    float w2 = out->data(0,0,0) - thr;
 
     std::cout << "thr: " << thr << std::endl;
     std::cout << "w1: " << w1 << std::endl;
