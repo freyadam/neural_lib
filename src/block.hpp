@@ -6,8 +6,6 @@
 
 #include <Eigen/unsupported/CXX11/Tensor>
 
-#include "op.hpp"
-
 namespace nl {
     
     ///
@@ -26,7 +24,9 @@ namespace nl {
               uint16_t width, uint16_t height):
             name(name),
             data(depth, width, height),
-            gradient(depth, width, height) {}
+            gradient(depth, width, height) {
+            zero_grad();
+        }
 
         ///
         /// Name of the block. Must be unique within a single network
@@ -45,6 +45,11 @@ namespace nl {
             }
             
             return std::move(v);
+        }
+
+        /// Fill 'gradient' tensor with just zeros
+        void zero_grad() {
+            gradient.setZero();
         }
 
         ///

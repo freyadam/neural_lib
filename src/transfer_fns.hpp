@@ -68,6 +68,17 @@ namespace nl {
         }
     };
 
+    /// Linear transfer function.
+    class Linear : public TransferFn {
+        virtual float forward(float x) {
+            return x;
+        }
+
+        virtual float backward(float) {
+            return 1.0;
+        }
+    };
+
     class TransferFns {
     public:
         static TransferFn & get(std::string name) {
@@ -79,6 +90,8 @@ namespace nl {
                 return relu;
             else if (name == "softplus")
                 return softplus;
+            else if (name == "linear")
+                return linear;
             else
                 throw UnknownOptionException();
         }
@@ -87,6 +100,7 @@ namespace nl {
         static Tanh tanh;
         static ReLU relu;
         static Softplus softplus;
+        static Linear linear;
     };
 
 } // namespace nl

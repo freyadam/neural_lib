@@ -14,7 +14,7 @@ namespace nl {
     class Neuron : public Op {
     public:
 
-        // TBD check that all inputs, including weights, have distinct names
+        // TODO check that all inputs, including weights, have distinct names
 
         /// Constructor.
         /// @param name name of the resulting neuron
@@ -45,7 +45,7 @@ namespace nl {
 
             // insert block and appropriate weight to vector
             InputPair ip;                
-            Block* weight = new Block(input->name + "_w", 1, 1, 1);
+            Block* weight = new Block(name + "_" + input->name + "_w", 1, 1, 1);
             weight->data(0,0,0) = Generator::get();
 
             ip.input = input;

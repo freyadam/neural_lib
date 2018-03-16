@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <random>
+#include <string> 
 
 #include <Eigen/unsupported/CXX11/Tensor>
 
@@ -8,37 +9,36 @@
 #include "block.hpp"
 #include "graph.hpp"
 #include "neuron.hpp"
+#include "reader.hpp"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
 
-    nl::Block b1("block", 1, 1, 1);
-    nl::Block b2("block", 1, 1, 1);
-    nl::Neuron n("n", "relu", &b1, &b2);
-
-    // get neuron output
-    nl::Block * out = n.outputs()["n_out"];
+    nl::Block b1("b1", 1, 1, 1);
+    nl::Block b2("b2", 1, 1, 1);
+    nl::Neuron n("n", "linear", &b1, &b2);
 
     b1.data(0,0,0) = 0;
-    b2.data(0,0,0) = 0;    
+    b2.data(0,0,0) = 0;
     n.forward();
 
-    float thr = out->data(0,0,0);
-    
+    float threshold = n.outputs()["n_out"]->data(0,0,0);
+
     b1.data(0,0,0) = 1;
+    b2.data(0,0,0) = 0;
     n.forward();
 
-    float w1 = out->data(0,0,0) - thr;
+    float w1 = n.outputs()["n_out"]->data(0,0,0) - threshold;
 
     b1.data(0,0,0) = 0;
-    b2.data(0,0,0) = 1;    
+    b2.data(0,0,0) = 1;
     n.forward();
 
-    float w2 = out->data(0,0,0) - thr;
+    float w2 = n.outputs()["n_out"]->data(0,0,0) - threshold;
 
-    std::cout << "thr: " << thr << std::endl;
+    std::cout << "threshold: " << threshold << std::endl;
     std::cout << "w1: " << w1 << std::endl;
     std::cout << "w2: " << w2 << std::endl;
 

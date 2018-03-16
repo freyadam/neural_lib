@@ -44,6 +44,15 @@ namespace nl {
         }
     };
 
+    /// 
+    /// Input failure. Most likely because input was malformed in some way.
+    ///
+    struct InputException : public std::exception {
+        const char * what() const throw () {
+            return "Input failure.";
+        }
+    };
+
 }
 
 #endif // NEURAL_LIB_EXCEPTIONS_H

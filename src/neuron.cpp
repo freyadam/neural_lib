@@ -17,7 +17,7 @@ namespace nl {
 
             // insert block and appropriate weight to vector
             InputPair ip;                
-            Block* weight = new Block(input->name + "_w", 1, 1, 1);
+            Block* weight = new Block(name + "_" + input->name + "_w", 1, 1, 1);
             weight->data(0,0,0) = Generator::get();
 
             ip.input = input;
@@ -56,7 +56,7 @@ namespace nl {
 
         // insert block and appropriate weight to vector
         InputPair ip;                
-        Block* weight = new Block(input->name + "_w", 1, 1, 1);
+        Block* weight = new Block(name + "_" + input->name + "_w", 1, 1, 1);
         weight->data(0,0,0) = Generator::get();
 
         ip.input = input;
@@ -93,8 +93,7 @@ namespace nl {
 
         x += threshold->data;
 
-        output->data = x;
-        // output->data(0,0,0) = transfer_fn.forward(x); // TODO
+        output->data(0,0,0) = transfer_fn.forward(x(0,0,0));
     }
 
     void Neuron::backward() {
@@ -105,7 +104,7 @@ namespace nl {
             // propagate gradient to input block 
             p.input->gradient += grad * p.weight->data;
             // propagate gradient to input block 
-            p.input->gradient += grad * p.input->data;
+            p.weight->gradient += grad * p.input->data;
         }
         
         // propagate gradient to threshold block
@@ -123,6 +122,20 @@ namespace nl {
 
     block_map Neuron::inputs() {
         block_map map;
+
+        // insert inputs 
+        for (auto & p : input_vector) {
+            map.insert(std::make_pair(p.input->name, p.input));
+        }
+
+        // insert weights
+        for (auto & p : input_vector) {
+            map.insert(std::make_pair(p.weight->name, p.weight));
+        }
+
+        // insert threshold
+        map.insert(std::make_pair(threshold->name, threshold));
+
         return std::move(map);                      
     }
 
