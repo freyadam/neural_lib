@@ -5,6 +5,7 @@
 #include "test_block.hpp"
 #include "test_neuron.hpp"
 #include "test_transfer_fn.hpp"
+#include "test_reader.hpp"
 
 int main(int argc, char **argv) {
 

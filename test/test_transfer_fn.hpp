@@ -65,5 +65,21 @@ TEST(TransferFnTest, Softplus) {
     EXPECT_TRUE(fn.backward(-1) > fn.backward(-10));                
 }
 
+TEST(TransferFnTest, Linear) {
+
+    nl::TransferFn & fn = nl::TransferFns::get("linear");
+
+    // forward
+    EXPECT_FLOAT_EQ(fn.forward(0), 0);
+    EXPECT_FLOAT_EQ(fn.forward(1), 1);
+    EXPECT_FLOAT_EQ(fn.forward(-2), -2);
+
+    // backward
+    EXPECT_FLOAT_EQ(fn.backward(-10), 1);
+    EXPECT_FLOAT_EQ(fn.backward(-1), 1);
+    EXPECT_FLOAT_EQ(fn.backward(0), 1);
+    EXPECT_FLOAT_EQ(fn.backward(1), 1);
+    EXPECT_FLOAT_EQ(fn.backward(10), 1);
+}
 
 #endif // NEURAL_LIB_TRANSFER_FN_TEST_H
