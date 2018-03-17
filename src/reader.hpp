@@ -59,33 +59,9 @@ namespace nl {
         /// @param name name of the Op
         /// @param file_addr address of text file with image addresses,
         /// each image address is on its own line
-        ImgReader(std::string name, std::string file_addr):
-        Op(name) {
-            
-            // check that text file exists and open it
-            std::ifstream file(file_addr, std::ifstream::in);
+        ImgReader(std::string name, std::string file_addr);
 
-            // each line contains a valid filename of an image
-            // all images must be of the same size
-            std::string line;
-            while (std::getline(file, line)) {
-
-                
-                
-            }
-
-
-            // create output block            
-            output_block = new Block(name + "_out", 1, 1, 1); // TODO change dims
-            owned.push_back(output_block);
-
-            // set beginning position in text file
-            
-        }
-
-        void forward() {
-
-        }
+        void forward();
 
         // reader has no inputs and as such no place to propagate gradient to
         void backward() {}
@@ -97,13 +73,26 @@ namespace nl {
 
         virtual block_map outputs() {
             block_map m = {std::pair<std::string, Block*>
-                           (output_block->name, output_block)};
-            
+                           (output_block->name, output_block)};            
             return std::move(m); 
         }
 
     private:
+
+        ///
+        /// return next image address in list, 
+        /// if end of file was reached start again from the beginning
+        /// 
+        std::string next_image_addr();
+
+        /// block in which resulting image is saved
         Block* output_block;
+
+        /// ifstream corresponding to text file with image addresses
+        std::ifstream line_stream;
+
+        /// address of text file with image addresses
+        std::string file_addr;
     };
 
 

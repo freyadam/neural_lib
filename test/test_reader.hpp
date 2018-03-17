@@ -5,30 +5,30 @@
 #include "reader.hpp"
 
 // file does not exist
-TEST(ReaderTest, NonExistingFile) {
+TEST(CsvReaderTest, NonExistingFile) {
     EXPECT_THROW(nl::CsvReader("reader", 
-                               "csv/definitely_not_valid_adress.csv"), 
+                               "test/csv/definitely_not_valid_adress.csv"), 
                  nl::InputException);
 }
 
 // file is empty 
-TEST(ReaderTest, EmptyFile) {
+TEST(CsvReaderTest, EmptyFile) {
     EXPECT_THROW(nl::CsvReader("reader", 
-                               "csv/empty_file.csv"), 
+                               "test/csv/empty_file.csv"), 
                  nl::InputException);
 }
 
 // no records in lines
-TEST(ReaderTest, NoRecords) {
+TEST(CsvReaderTest, NoRecords) {
     EXPECT_THROW(nl::CsvReader("reader", 
-                               "csv/empty_lines.csv"), 
+                               "test/csv/empty_lines.csv"), 
                  nl::InputException);
 }
 
 // valid input that loops
-TEST(ReaderTest, Valid) {
+TEST(CsvReaderTest, Valid) {
 
-    nl::CsvReader r("reader", "csv/valid.csv");
+    nl::CsvReader r("reader", "test/csv/valid.csv");
     nl::Block* o1 = r.outputs()["reader_out0"];
     nl::Block* o2 = r.outputs()["reader_out1"];
 
@@ -58,5 +58,34 @@ TEST(ReaderTest, Valid) {
     EXPECT_FLOAT_EQ(o1->data(0,0,0), 2e4);
     EXPECT_FLOAT_EQ(o2->data(0,0,0), -1.23e-1);
 }
+
+// non-existing file
+TEST(ImgReaderTest, NonExistingFile) {
+    EXPECT_THROW(nl::CsvReader("reader", 
+                               "test/img/definitely_not_valid_adress.csv"), 
+                 nl::InputException);
+}
+
+// empty list
+TEST(ImgReaderTest, EmptyFile) {
+    EXPECT_THROW(nl::ImgReader("reader", 
+                               "test/img/empty.csv"),
+                 nl::InputException);
+}
+
+// valid input
+TEST(ImgReaderTest, ValidFile) {
+    EXPECT_NO_THROW(nl::ImgReader("reader", 
+                                  "test/img/valid.csv"));
+}
+
+// dimension mismatches
+TEST(ImgReaderTest, DimMismatch) {
+    EXPECT_THROW(nl::ImgReader("reader", 
+                               "test/img/dim_mismatch.csv"),
+                 nl::DimensionException);
+}
+
+// forward TODO
 
 #endif // NEURAL_LIB_READER_TEST_H

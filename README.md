@@ -8,6 +8,8 @@ Several external projects or libraries are used to provide functionality that is
 
 All dependencies are provided in the `extern` folder for ease of use.
 
+As a sidenote, to make Eigen folder header-only its structure was changed a bit. Naturally, some files were left out but also files were moved around. So the addresses to files in used folder and the addresses in original project may not correspond.
+
 ## Usage
 
 The precise usage depends on the use case. By default, project is compiled as a dynamical library in the `bin` directory using the `make all` command. 

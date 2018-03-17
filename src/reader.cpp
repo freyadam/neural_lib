@@ -64,7 +64,6 @@ namespace nl {
     void CsvReader::forward() {            
         std::string line;
 
-        // if end of file was reached, start reading 
         if (!std::getline(line_stream, line)) {
             // issue with reading from file, not end of line
             if (!line_stream.eof()) {
@@ -97,5 +96,74 @@ namespace nl {
 
         return std::move(m);
     }
+
+    ImgReader::ImgReader(std::string name, std::string file_addr):
+        Op(name), file_addr(file_addr) {
+            
+        // check that text file exists and open it
+        std::ifstream file(file_addr, std::ifstream::in);
+
+        // each line contains a valid filename of an image
+        // all images must be of the same size
+        bool first = false;
+        uint16_t channel_no = 0, width = 0, height = 0;
+        std::string img_address;
+        while (std::getline(file, img_address)) {
+            cimg_library::CImg<float> img(img_address.c_str());                
+
+            if (!first) {
+                first = true;
+                channel_no = img.spectrum();
+                width = img.width();
+                height = img.height();
+            } else {
+                if (channel_no != img.spectrum() ||
+                    width != img.width() ||
+                    height != img.height())
+                    throw DimensionException(); 
+            }                
+        }            
+
+        // empty list
+        if (!first)
+            throw InputException();
+
+        // create output block            
+        output_block = new Block(name + "_out", channel_no, width, height);
+        owned.push_back(output_block);
+
+        // set beginning position in text file
+        line_stream = std::ifstream(file_addr, std::ifstream::in);
+    }
+
+    void ImgReader::forward() {            
+        cimg_library::CImg<float> img(next_image_addr().c_str());                
+
+        // load data in tensor
+        for (uint16_t s = 0; s < img.spectrum(); ++s) {
+            for (uint16_t w = 0; w < img.width(); ++w) {
+                for (uint16_t h = 0; h < img.height(); ++h) {
+                    output_block->data(s, w, h) = img(w, h, s);
+                }
+            }
+        }
+    }
+
+    std::string ImgReader::next_image_addr() {
+        std::string line;
+
+        if (!std::getline(line_stream, line)) {
+            // issue with reading from file, not end of line
+            if (!line_stream.eof()) {
+                throw InputException();
+            }
+            // otherwise start reading again from the beginning
+            line_stream = std::ifstream(file_addr, std::ifstream::in);
+            std::getline(line_stream, line);
+        }
+            
+        return line;
+    }
+
 
 } // namespace nl

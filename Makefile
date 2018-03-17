@@ -45,4 +45,5 @@ doc:
 	doxygen doxygen_config
 
 test:	$(LIB)
-	make --directory=test run
+	make --directory=test all
+	LD_LIBRARY_PATH=bin ./test/test_binary
