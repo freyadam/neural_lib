@@ -98,17 +98,17 @@ namespace nl {
 
     void Neuron::backward() {
         Eigen::Tensor<float, 3> grad = 
-            output->gradient * transfer_fn.backward(output->data(0,0,0));
-                                           
+            output->grad * transfer_fn.backward(output->data(0,0,0));
+
         for (auto & p : input_vector) {    
             // propagate gradient to input block 
-            p.input->gradient += grad * p.weight->data;
+            p.input->grad += grad * p.weight->data;
             // propagate gradient to input block 
-            p.weight->gradient += grad * p.input->data;
+            p.weight->grad += grad * p.input->data;
         }
         
         // propagate gradient to threshold block
-        threshold->gradient += grad;        
+        threshold->grad += grad;        
     }
 
     block_map Neuron::outputs() {

@@ -48,6 +48,12 @@ namespace nl {
         /// Blocks that are modified during forward pass
         virtual block_map outputs() = 0;
 
+        ///
+        /// set gradients of all neighbouring blocks (both inputs and outputs)
+        /// to zero
+        ///
+        void zero_grad();
+
     protected:
         ///
         /// Name of the operation. It needs to be unique within a network 

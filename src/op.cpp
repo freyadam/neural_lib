@@ -11,4 +11,17 @@ namespace nl {
             }
     }        
 
+    void Op::zero_grad() {
+        // zero out inputs
+        for (auto pair : inputs()) {
+            Block* b = pair.second;
+            b->zero_grad();
+        }
+        // zero out outputs
+        for (auto pair : outputs()) {
+            Block* b = pair.second;
+            b->zero_grad();
+        }
+    }
+
 } // namespace nl

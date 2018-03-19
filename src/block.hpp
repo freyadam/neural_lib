@@ -2,6 +2,7 @@
 #define NEURAL_LIB_BLOCK_H
 
 #include <memory>
+#include <unordered_map>
 #include <vector>
 
 #include <Eigen/unsupported/CXX11/Tensor>
@@ -24,7 +25,7 @@ namespace nl {
               uint16_t width, uint16_t height):
             name(name),
             data(depth, width, height),
-            gradient(depth, width, height) {
+            grad(depth, width, height) {
             zero_grad();
         }
 
@@ -49,7 +50,7 @@ namespace nl {
 
         /// Fill 'gradient' tensor with just zeros
         void zero_grad() {
-            gradient.setZero();
+            grad.setZero();
         }
 
         ///
@@ -61,7 +62,7 @@ namespace nl {
         /// 
         /// Storage for gradient flowing backward during backpropagation.
         /// 
-        Eigen::Tensor<float,3> gradient;
+        Eigen::Tensor<float,3> grad;
 
 	};
    
