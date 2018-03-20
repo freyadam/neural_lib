@@ -10,7 +10,7 @@ namespace nl {
         // Solver(Op* op, Op* correct) {};
         Solver(Op* op, Block* block):
             op(op) {
-            desired._push_back(block);            
+            desired.push_back(block);            
         }
         Solver(Op* op, std::vector<Block*> blocks):
             op(op), desired(blocks) {}

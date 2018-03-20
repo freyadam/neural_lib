@@ -25,6 +25,13 @@ namespace nl {
         /// Constructor.
         /// @param name name of the resulting neuron
         /// @param fn_name name of used transfer function as defined in TransferFns
+        /// @param op previous operation with only a single one output block of
+        /// correct dimension
+        Neuron(std::string name, std::string fn_name, Op& op);
+
+        /// Constructor.
+        /// @param name name of the resulting neuron
+        /// @param fn_name name of used transfer function as defined in TransferFns
         /// @param input input block
         Neuron(std::string name, std::string fn_name, Block* input);
 

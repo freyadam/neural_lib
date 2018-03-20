@@ -28,14 +28,14 @@ int main(int argc, char *argv[])
     nl::Block &w2 = *n.inputs()["n_b2_w"];
     nl::Block &thr = *n.inputs()["n_thr"];
 
-    float a=3, b=-2, c=0.5;
+    float a=5, b=-2, c=3;
     float x, y, z;
 
     for (uint16_t i = 0; i < 10000; ++i) {
         n.zero_grad();
 
-        b1.data(0,0,0) = x = nl::Generator::get();
-        b2.data(0,0,0) = y = nl::Generator::get();
+        b1.data(0,0,0) = x = 10 * nl::Generator::get();
+        b2.data(0,0,0) = y = 10 * nl::Generator::get();
         d.data(0,0,0) = z = (a*x + b*y - c > 0 ? 1 : -1);
 
         // forward pass
