@@ -28,8 +28,8 @@ TEST(BlockTest, DataRW) {
     b.data(0,0,0) = 3.2;
     EXPECT_FLOAT_EQ(b.data(0,0,0), 3.2);
 
-    b.gradient(0,0,0) = -1.7;
-    EXPECT_FLOAT_EQ(b.gradient(0,0,0), -1.7);
+    b.grad(0,0,0) = -1.7;
+    EXPECT_FLOAT_EQ(b.grad(0,0,0), -1.7);
 }
 
 #endif // NEURAL_LIB_BLOCK_TEST_H

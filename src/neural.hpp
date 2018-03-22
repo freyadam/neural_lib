@@ -2,6 +2,7 @@
 #define NEURAL_LIB_H
 
 #include "block.hpp"
+#include "dense.hpp"
 #include "error.hpp"
 #include "exceptions.hpp"
 #include "graph.hpp"

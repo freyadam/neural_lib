@@ -104,11 +104,11 @@ TEST(NeuronTest, Backward) {
     b1.zero_grad();
     b2.zero_grad();
 
-    n.outputs()["n_out"]->gradient(0,0,0) = grad_on_output;
+    n.outputs()["n_out"]->grad(0,0,0) = grad_on_output;
     n.backward();
 
-    EXPECT_FLOAT_EQ(b1.gradient(0,0,0), grad_on_output * w1);
-    EXPECT_FLOAT_EQ(b2.gradient(0,0,0), grad_on_output * w2);
+    EXPECT_FLOAT_EQ(b1.grad(0,0,0), grad_on_output * w1);
+    EXPECT_FLOAT_EQ(b2.grad(0,0,0), grad_on_output * w2);
 }
 
 // correct outputs() 

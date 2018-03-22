@@ -3,14 +3,14 @@
 
 namespace nl {
 
-   Softmax:: Softmax(std::string name, Op& op):
+   Softmax:: Softmax(std::string name, Op* op):
         Op(name) {
 
         // check that previous operation has exactly a single output block
-        if (op.outputs().size() != 1)
+        if (op->outputs().size() != 1)
             throw InputException();
 
-        input = op.outputs().begin()->second;
+        input = op->outputs().begin()->second;
         create_output(input);
     }
 
@@ -38,6 +38,7 @@ namespace nl {
 
         Eigen::Tensor<float, 3> exp_in = input->data.exp();
         Eigen::Tensor<float, 0> sum = exp_in.sum();
+
         output->data = exp_in / sum();
 
     }
@@ -48,11 +49,11 @@ namespace nl {
 
         Eigen::Tensor<float, 3> t(dim[0], dim[1], dim[2]);
         t.setZero();
-        // get first element in tensor (or rather its position)
+        // get first element in tensor, or rather its position
         for (uint16_t i_1 = 0; i_1 < dim[0]; i_1++) {
             for (uint16_t j_1 = 0; j_1 < dim[1]; j_1++) {
                 for (uint16_t k_1 = 0; k_1 < dim[2]; k_1++) {
-                    // get second element in tensor (or rather its position)x
+                    // get second element in tensor, or rather its position
                     for (uint16_t i_2 = 0; i_2 < dim[0]; i_2++) {
                         for (uint16_t j_2 = 0; j_2 < dim[1]; j_2++) {
                             for (uint16_t k_2 = 0; k_2 < dim[2]; k_2++) {
@@ -77,5 +78,22 @@ namespace nl {
 
         input->grad = t;
     }
+
+    block_map Softmax::outputs() {
+        block_map map;
+
+        map.insert(std::pair<std::string, Block*>(output->name,
+                                                  output));
+        return std::move(map);                                          
+    }
+
+    block_map Softmax::inputs() {
+        block_map map;
+
+        map.insert(std::pair<std::string, Block*>(input->name,
+                                                  input));
+        return std::move(map);                                                      
+    }
+
 
 } // namespace nl

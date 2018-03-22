@@ -24,11 +24,6 @@ namespace nl {
         return 0.5 * sum;
     }
 
-    std::vector<float> Error::L1_grad(std::vector<Block*> net_outputs, 
-                                      std::vector<Block*> correct_outputs) {
-        return std::vector<float>(); // TODO
-    }
-        
     float Error::L1(Block* net_output, Block* correct_output) {
 
         // compute error for each pair
@@ -42,10 +37,9 @@ namespace nl {
         return 0.5 * sum;
     }
 
-    float Error::L1_grad(Block* net_output, Block* correct_output) {
-        return 0.0; // TODO
-    }
-
+    // Eigen::Tensor<float, 3> // TODO
+    // Error::L1_grad(Block* net_output, Block* correct_output) {
+    // }
     float Error::L2(std::vector<Block*> net_outputs, 
                     std::vector<Block*> correct_outputs) {
         float sum = 0.0;
@@ -65,14 +59,15 @@ namespace nl {
         return 0.5 * sqrt(sum);
     }    
 
-    std::vector<float> Error::L2_grad(std::vector<Block*> net_outputs, 
-                                      std::vector<Block*> correct_outputs) {
-        std::vector<float> ret;
+    std::vector<Eigen::Tensor<float, 3>>
+        Error::L2_grad(std::vector<Block*> net_outputs, 
+                       std::vector<Block*> correct_outputs) {
+        std::vector<Eigen::Tensor<float, 3>> ret;
 
         for (uint16_t i = 0; i < net_outputs.size(); i++) {
             Eigen::Tensor<float,3> t = 
                 (net_outputs[i]->data - correct_outputs[i]->data);
-            ret.push_back(t(0,0,0));
+            ret.push_back(t);
         }
 
         return ret;
@@ -93,12 +88,12 @@ namespace nl {
         return 0.5 * sqrt(sum);
     }
 
-    float Error::L2_grad(Block* net_output,                     
-                    Block* correct_output) {
+    Eigen::Tensor<float, 3> Error::L2_grad(Block* net_output,                     
+                                           Block* correct_output) {
         Eigen::Tensor<float,3> t = 
             (net_output->data - correct_output->data);
 
-        return t(0,0,0);
+        return t;
     }
 
 } // namespace nl

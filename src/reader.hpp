@@ -53,8 +53,6 @@ namespace nl {
 
     class ImgReader : public Op {
     public:
-        // TODO black and white?
-
         /// Constructor
         /// @param name name of the Op
         /// @param file_addr address of text file with image addresses,

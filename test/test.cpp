@@ -6,6 +6,7 @@
 #include "test_neuron.hpp"
 #include "test_transfer_fn.hpp"
 #include "test_reader.hpp"
+#include "test_softmax.hpp"
 
 int main(int argc, char **argv) {
 

@@ -18,7 +18,7 @@ namespace nl {
         /// @param name name of the softmax op
         /// @param op previous operation with only a single one output block of
         /// correct dimension
-        Softmax(std::string name, Op& op);
+        Softmax(std::string name, Op* op); // TODO change to Op*
 
         /// Constructor.
         /// @param name name of the softmax op
@@ -28,24 +28,10 @@ namespace nl {
         virtual void forward();
 
         virtual void backward();
+    
+        virtual block_map outputs();
 
-        virtual block_map outputs() {
-            block_map map;
-
-            map.insert(std::pair<std::string, Block*>(output->name,
-                                                      output));
-
-            return std::move(map);                                          
-        }
-
-        virtual block_map inputs() {
-            block_map map;
-
-            map.insert(std::pair<std::string, Block*>(input->name,
-                                                      input));
-
-            return std::move(map);                                                      
-        }
+        virtual block_map inputs();
 
     private:
         ///

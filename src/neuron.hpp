@@ -14,8 +14,6 @@ namespace nl {
     class Neuron : public Op {
     public:
 
-        // TODO check that all inputs, including weights, have distinct names
-
         /// Constructor.
         /// @param name name of the resulting neuron
         /// @param fn_name name of used transfer function as defined in TransferFns
