@@ -66,7 +66,7 @@ namespace nl {
 
 	};
    
-    typedef std::unordered_map<std::string, Block *> block_map;    
+    typedef std::unordered_map<std::string, Block*> block_map;    
 
 } // namespace nl
 

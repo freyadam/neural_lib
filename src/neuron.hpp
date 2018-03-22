@@ -63,7 +63,6 @@ namespace nl {
             owned.push_back(weight);                        
         }
 
-
         virtual void forward();
 
         virtual void backward();
