@@ -84,7 +84,7 @@ namespace nl {
 
         map.insert(std::pair<std::string, Block*>(output->name,
                                                   output));
-        return std::move(map);                                          
+        return map;
     }
 
     block_map Softmax::inputs() {
@@ -92,7 +92,7 @@ namespace nl {
 
         map.insert(std::pair<std::string, Block*>(input->name,
                                                   input));
-        return std::move(map);                                                      
+        return map;
     }
 
 

@@ -3,52 +3,54 @@
 
 #include <vector>
 
+#include "block.hpp"
+#include "net.hpp"
+#include "error.hpp"
+
 namespace nl {
 
+    /// Solver tasked with optimizing weights of given network using
+    /// supervised learning.
     class Solver {
     public:
-        // Solver(Op* op, Op* correct) {};
-        Solver(Op* op, Block* block):
-            op(op) {
-            desired.push_back(block);            
+        /// Constructor.
+        /// @param net neural network that is being trained
+        /// @param output_block block in which computation result will
+        /// be stored
+        /// @param desired_block block with correct result data
+        Solver(Net* net, Block* output_block, Block* desired_block):
+            net(net), lr(0.1) {
+            output.push_back(output_block);
+            desired.push_back(desired_block);            
         }
-        Solver(Op* op, std::vector<Block*> blocks):
-            op(op), desired(blocks) {}
-
-        float train(uint16_t cycles=1) {
-
-            for (uint16_t i = 0; i < cycles; ++i) {
-                // zero out gradient
-                
-                // forward pass
-
-                // compute error gradient on the op output and 
-                // save it in the output blocks
-
-                // backward
-
-                // update weights
-            }
-
-            return Error::L2(output, desired);
-        }
-
-        float train_until_convergence() {
-            return 0.0; // TODO
-        }
+        /// Constructor.
+        /// @param net neural network that is being trained
+        /// @param output vector of blocks in which computation result will
+        /// be storedx
+        /// @param desired vector of blocks with correct result data.
+        Solver(Net* net, 
+               std::vector<Block*> output, 
+               std::vector<Block*> desired):
+            net(net), output(output), desired(desired), lr(0.1) {}        
+        /// Forward pass, backward pass and subsequent weight update
+        /// constitutes a single cycle. 
+        /// @param cycles how many times should the update be performed
+        /// @return error from the last cycle
+        float train(uint16_t cycles=1);
     private:
         ///
-        /// Operation (most probably network) that is being 
+        /// Network that is being 
         /// trained by the solver.
         ///
-        Op* op;
-        
+        Net* net;    
         /// op outputs
         std::vector<Block*> output;
-
         /// desired outputs
         std::vector<Block*> desired;
-
+        /// learning rate
+        float lr;
+        /// momentum learning rate
+        float momentum_lr;
     };
 
 

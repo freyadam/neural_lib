@@ -4,6 +4,7 @@
 
 #include "block.hpp"
 #include "op.hpp"
+#include "random.hpp"
 #include "transfer_fns.hpp"
 
 namespace nl {
@@ -35,20 +36,36 @@ namespace nl {
         Dense(std::string name, std::string fn_name, Block* input, 
               uint16_t depth, uint16_t width, uint16_t height);
 
-        virtual void forward() {}
+        virtual void forward();
 
-        virtual void backward() {}
+        virtual void backward();
 
         virtual block_map outputs();
 
         virtual block_map inputs();
 
     private:
+        ///
+        /// Create output, weight and threshold blocks and 
+        /// initialize them properly.
+        ///
+        void create_blocks(uint16_t input_size, uint16_t depth, 
+                           uint16_t width, uint16_t height);
         /// Input block
         Block* input;
         /// Output block
         Block* output;
-
+        ///
+        /// Weight block, 6-dimensional Tensor with first three dimensions 
+        /// specifying the connection in an input block and the other three
+        /// dimensions specifying connection in an output block. Although 
+        /// functionally it is really a 6-dim. tensor, it is stored in a 
+        /// 3-dimensional Tensor with first two dimensions set to 1, so
+        /// it is actually stored as a vector.
+        ///        
+        Block* weight;
+        /// Threshold block
+        Block* threshold;
         /// Transfer function reference
         TransferFn& transfer_fn;
     }; 

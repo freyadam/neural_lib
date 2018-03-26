@@ -45,7 +45,7 @@ namespace nl {
                 v.push_back(d);
             }
             
-            return std::move(v);
+            return v;
         }
 
         /// Fill 'gradient' tensor with just zeros
@@ -63,6 +63,13 @@ namespace nl {
         /// Storage for gradient flowing backward during backpropagation.
         /// 
         Eigen::Tensor<float,3> grad;
+
+        ///
+        /// True iff it is desirable to change the data based 
+        /// on the gradient. Set to true for weights,
+        /// set to false for blocks holding data passed through net.
+        /// 
+        bool trainable = false;
 
 	};
    

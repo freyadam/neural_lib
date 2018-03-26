@@ -49,20 +49,21 @@ namespace nl {
         virtual block_map outputs() = 0;
 
         ///
-        /// set gradients of all neighbouring blocks (both inputs and outputs)
-        /// to zero
+        /// Set gradients of all neighbouring blocks (both inputs and outputs)
+        /// to zero.
         ///
         void zero_grad();
 
-    protected:
         ///
         /// Name of the operation. It needs to be unique within a network 
         /// as it is used as an identifier,
         ///
 		std::string name;        
+
+    protected:
         /// Blocks that were created during construction of this op. 
         std::vector<Block *> owned;
-        /// decides if owned block will deleted in destructor
+        /// Decides if owned block will deleted in destructor.
         bool delete_owned;
 	};
 

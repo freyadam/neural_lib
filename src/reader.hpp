@@ -29,7 +29,7 @@ namespace nl {
         void backward() {}
         
         virtual block_map inputs() {
-            return std::move(block_map());
+            return block_map();
         }
 
         virtual block_map outputs();
@@ -66,13 +66,13 @@ namespace nl {
         
         // reader has no inputs so return empty map
         virtual block_map inputs() {
-            return std::move(block_map());
+            return block_map();
         }
 
         virtual block_map outputs() {
             block_map m = {std::pair<std::string, Block*>
                            (output_block->name, output_block)};            
-            return std::move(m); 
+            return m;
         }
 
     private:

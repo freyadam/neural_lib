@@ -15,6 +15,23 @@ namespace nl {
 
     /// Oriented graph
     class Graph {
+    public:
+    
+        /// Add vertex
+        /// @param name name of the new vertex
+        bool add_vertex(string name);
+
+        /// Add edge
+        bool add_edge(string from, string to);
+
+        ///
+        /// Get topological order of vertices. If there is no such order, 
+        /// throw an exception.
+        /// @return Names of vertices in topological order. First vertex 
+        /// in position zero, second vertex in position one etc.
+        ///    
+        vector<string> get_ordering();
+
     private:
 
         /// enum used during topological sort
@@ -47,25 +64,10 @@ namespace nl {
         /// Vector of all vertices in a graph
         unordered_map<string, Vertex> vertices;
 
-    public:
-    
-        /// Add vertex
-        /// @param name name of the new vertex
-        bool add_vertex(string name);
-
-        /// Add edge
-        bool add_edge(string from, string to);
-
-        ///
-        /// Get topological order of vertices. If there is no such order, 
-        /// throw an exception.
-        /// @return Names of vertices in topological order. First vertex 
-        /// in position zero, second vertex in position one etc.
-        ///    
-        vector<string> get_ordering();
-
     };
 
 } // namespace nl
 
 #endif // NEURAL_LIB_GRAPH_H
+
+

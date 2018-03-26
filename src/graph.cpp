@@ -16,7 +16,7 @@ void nl::Graph::visit(Vertex & v, vector<Vertex *> & vect) {
     v.mark = Mark::CURRENT;
 
     // visit all successors
-    for (auto succ : v.outgoing) {
+    for (auto &  succ : v.outgoing) {
         visit(*succ, vect);   
     }
         
@@ -84,9 +84,15 @@ vector<string> nl::Graph::get_ordering() {
 
     reverse(order.begin(), order.end());
 
+    // restore marks for next iteration
+    for (auto & vertex_it : vertices) {
+        Vertex& v = vertex_it.second;
+        v.mark = Mark::NONE;
+    }
+
     vector<string> ret;
-    for (auto ptr : order) {
+    for (auto & ptr : order) {
         ret.push_back(ptr->name);
     }
-    return std::move(ret);
+    return ret;
 }

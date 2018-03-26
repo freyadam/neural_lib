@@ -94,7 +94,7 @@ namespace nl {
             m.insert(std::make_pair(b->name, b));
         }
 
-        return std::move(m);
+        return m;
     }
 
     ImgReader::ImgReader(std::string name, std::string file_addr):

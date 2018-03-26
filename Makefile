@@ -7,6 +7,7 @@ EXT=extern
 SOURCES=$(wildcard $(SRC)/*.cpp)
 HEADERS=$(wildcard $(SRC)/*.hpp)
 OBJECTS=$(SOURCES:$(SRC)/%.cpp=$(OBJ)/%.o)
+LIB_OBJECTS=$(filter-out $(OBJ)/example%, $(filter-out $(OBJ)/main.o, $(OBJECTS)))
 MAIN=$(BIN)/main
 LIB=$(BIN)/libneural.so
 
@@ -20,7 +21,7 @@ LDFLAGS=
 
 all: $(LIB) $(MAIN)
 
-$(LIB): $(filter-out $(OBJ)/main.o, $(OBJECTS))
+$(LIB): $(LIB_OBJECTS)
 	@mkdir -p $(BIN)
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared $^ -o $@
 

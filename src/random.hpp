@@ -4,6 +4,8 @@
 
 #include <random>
 
+#include "block.hpp"
+
 namespace nl {
 
     // random number generator
@@ -14,6 +16,7 @@ namespace nl {
         }
         static std::random_device gen;
         static std::uniform_real_distribution<float> uniform;
+        static void init_random(Block* block);
     };
 }
 

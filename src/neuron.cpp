@@ -3,14 +3,14 @@
 
 namespace nl {
 
-    Neuron::Neuron(std::string name, std::string fn_name, Op& op):
+    Neuron::Neuron(std::string name, std::string fn_name, Op* op):
         Op(name), transfer_fn(TransferFns::get(fn_name)) {                        
 
         // check that previous operation has exactly a single output block
-        if (op.outputs().size() != 1)
+        if (op->outputs().size() != 1)
             throw InputException();
 
-        Block* input = op.outputs().begin()->second;
+        Block* input = op->outputs().begin()->second;
         
         // check that input is of correct dimension
         auto dims = input->dimensions();
@@ -22,6 +22,7 @@ namespace nl {
         InputPair ip;                
         Block* weight = new Block(name + "_" + input->name + "_w", 1, 1, 1);
         weight->data(0,0,0) = Generator::get();
+        weight->trainable = true; // weights should be trained
 
         ip.input = input;
         ip.weight = weight;
@@ -35,7 +36,8 @@ namespace nl {
                               1,1,1);
         // set original threshold
         threshold->data(0,0,0) = Generator::get();
-        
+        threshold->trainable = true; // weights should be trained
+
         /// output becomes "owned" so it may be properly deleted
         owned.push_back(threshold);
 
@@ -63,7 +65,7 @@ namespace nl {
             InputPair ip;                
             Block* weight = new Block(name + "_" + input->name + "_w", 1, 1, 1);
             weight->data(0,0,0) = Generator::get();
-
+            weight->trainable = true; // weights should be trained
             ip.input = input;
             ip.weight = weight;
             input_vector.push_back(ip);
@@ -77,6 +79,7 @@ namespace nl {
                               1,1,1);
         // set original threshold
         threshold->data(0,0,0) = Generator::get();
+        threshold->trainable = true; // threshold should be trained
         
         /// output becomes "owned" so it may be properly deleted
         owned.push_back(threshold);
@@ -102,6 +105,7 @@ namespace nl {
         InputPair ip;                
         Block* weight = new Block(name + "_" + input->name + "_w", 1, 1, 1);
         weight->data(0,0,0) = Generator::get();
+        weight->trainable = true;
 
         ip.input = input;
         ip.weight = weight;
@@ -115,6 +119,7 @@ namespace nl {
                               1,1,1);
         // set original threshold
         threshold->data(0,0,0) = Generator::get();
+        threshold->trainable = true;
         
         /// output becomes "owned" so it may be properly deleted
         owned.push_back(threshold);
@@ -161,7 +166,7 @@ namespace nl {
         map.insert(std::pair<std::string, Block*>(output->name,
                                                   output));
 
-        return std::move(map);                                          
+        return map;
     }
 
     block_map Neuron::inputs() {
@@ -180,7 +185,7 @@ namespace nl {
         // insert threshold
         map.insert(std::make_pair(threshold->name, threshold));
 
-        return std::move(map);                      
+        return map;
     }
 
 } // namespace nl

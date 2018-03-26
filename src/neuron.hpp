@@ -25,7 +25,7 @@ namespace nl {
         /// @param fn_name name of used transfer function as defined in TransferFns
         /// @param op previous operation with only a single one output block of
         /// correct dimension
-        Neuron(std::string name, std::string fn_name, Op& op);
+        Neuron(std::string name, std::string fn_name, Op* op);
 
         /// Constructor.
         /// @param name name of the resulting neuron
@@ -52,6 +52,7 @@ namespace nl {
             InputPair ip;                
             Block* weight = new Block(name + "_" + input->name + "_w", 1, 1, 1);
             weight->data(0,0,0) = Generator::get();
+            weight->trainable = true; // weights should be trained
 
             ip.input = input;
             ip.weight = weight;

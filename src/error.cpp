@@ -46,6 +46,7 @@ namespace nl {
 
         if (net_outputs.size() != correct_outputs.size())
             throw InputException();
+
         // compute error for each pair
         for (uint16_t i = 0; i < net_outputs.size(); i++) {
             // subtract one tensor from the other and 
@@ -53,7 +54,8 @@ namespace nl {
             Eigen::Tensor<float,3> t = 
                 (net_outputs[i]->data - correct_outputs[i]->data).square();
             // sum up elements of tensor and add it to complete error
-            sum += ((Eigen::Tensor<float,3>)t.sum())(0);
+            Eigen::Tensor<float,0> t2 = t.sum();
+            sum += t2();
         }
 
         return 0.5 * sqrt(sum);
@@ -62,6 +64,7 @@ namespace nl {
     std::vector<Eigen::Tensor<float, 3>>
         Error::L2_grad(std::vector<Block*> net_outputs, 
                        std::vector<Block*> correct_outputs) {
+
         std::vector<Eigen::Tensor<float, 3>> ret;
 
         for (uint16_t i = 0; i < net_outputs.size(); i++) {
