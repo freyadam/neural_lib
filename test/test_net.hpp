@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "op.hpp"
+#include "neuron.hpp"
 #include "net.hpp"
 
 // add_op exception

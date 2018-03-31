@@ -1,14 +1,15 @@
 
 #include "gtest/gtest.h"
 
-#include "test_graph.hpp"
 #include "test_block.hpp"
-#include "test_neuron.hpp"
-#include "test_transfer_fn.hpp"
-#include "test_reader.hpp"
-#include "test_softmax.hpp"
-#include "test_serialization.hpp"
+#include "test_dense.hpp"
+#include "test_graph.hpp"
 #include "test_net.hpp"
+#include "test_neuron.hpp"
+#include "test_reader.hpp"
+#include "test_serialization.hpp"
+#include "test_softmax.hpp"
+#include "test_transfer_fn.hpp"
 
 int main(int argc, char **argv) {
 
