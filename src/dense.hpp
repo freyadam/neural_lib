@@ -14,6 +14,7 @@ namespace nl {
     /// cell and each output cell have an independent weight value
     /// 
     class Dense : public Op {
+    public:
 
         /// Constructor.
         /// @param name name of the resulting dense layer

@@ -16,7 +16,7 @@ namespace nl {
 
         // 3-dim block
         auto input_dims = input->dimensions();
-        if (input_dims.size() == 3)
+        if (input_dims.size() != 3)
             throw DimensionException();
 
         create_blocks(input_dims[0] * input_dims[1] * input_dims[2],
@@ -29,7 +29,7 @@ namespace nl {
 
         // 3-dim block
         auto input_dims = input->dimensions();
-        if (input_dims.size() == 3)
+        if (input_dims.size() != 3)
             throw DimensionException();
 
         create_blocks(input_dims[0] * input_dims[1] * input_dims[2],
@@ -206,7 +206,7 @@ namespace nl {
         for (uint16_t i = 0; i < to_d; ++i) {
             for (uint16_t j = 0; j < to_w; ++j) {
                 for (uint16_t k = 0; k < to_h; ++k) {
-                    threshold->data(i,j,k) += grad(i,j,k);
+                    threshold->grad(i,j,k) += grad(i,j,k);
                 }   
             }   
         }
