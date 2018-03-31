@@ -3,6 +3,7 @@
 
 #include <vector> 
 #include <unordered_map>
+#include <boost/serialization/vector.hpp>
 
 #include "block.hpp"
 
@@ -11,9 +12,13 @@ class Block;
 
 namespace nl {
 
+    /// Abstract class representing all nodes in computational graph
+    /// that actually perform any kind of computation.
 	class Op {
     public:
 
+        /// Constructor 
+        /// @param name name of the operation
         Op(std::string name): name(name) {
             // created blocks will be destroyed in destructor
             delete_owned = true;
@@ -60,11 +65,21 @@ namespace nl {
         ///
 		std::string name;        
 
+        template<class Archive>
+        void serialize(Archive & ar, const unsigned int version)
+        {
+            ar & name;
+            ar & owned;
+            ar & delete_owned;;
+        }
+
     protected:
         /// Blocks that were created during construction of this op. 
         std::vector<Block *> owned;
         /// Decides if owned block will deleted in destructor.
         bool delete_owned;
+
+        friend class boost::serialization::access;
 	};
 
 } // namespace nl

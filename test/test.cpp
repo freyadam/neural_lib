@@ -7,6 +7,7 @@
 #include "test_transfer_fn.hpp"
 #include "test_reader.hpp"
 #include "test_softmax.hpp"
+#include "test_serialization.hpp"
 #include "test_net.hpp"
 
 int main(int argc, char **argv) {

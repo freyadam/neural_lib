@@ -4,6 +4,8 @@
 #include <vector>
 #include <unordered_map>
 #include <iostream>
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/vector.hpp>
 
 #include "random.hpp"
 #include "op.hpp"
@@ -11,6 +13,12 @@
 
 namespace nl {
 
+    ///
+    /// Operation representing single artificial neuron. Each input and its 
+    /// corresponding weight is stored in its own block. Number of inputs is not
+    /// specified. Threshold (with its own block) is also added to the potential.
+    /// Potential is then passed through transfer function.
+    ///
     class Neuron : public Op {
     public:
 
@@ -70,12 +78,31 @@ namespace nl {
 
         virtual block_map inputs();
 
+        template<class Archive>
+        void serialize(Archive & ar, const unsigned int version)
+        {
+            ar & boost::serialization::base_object<nl::Op>(*this);
+            ar & input_vector;
+            ar & output;
+            ar & threshold;
+            // ar & transfer_fn;   // TODO serialize transfer functions
+        }
+
     private:
 
         /// Input block and weight pair
         struct InputPair {
             Block* input; /// input from previous layer
             Block* weight; /// corresponding weight
+
+            template<class Archive>
+            void serialize(Archive & ar, const unsigned int version)
+            {
+                ar & input;
+                ar & weight;
+            }
+
+            friend class boost::serialization::access;
         };
         /// All pairs input/weight used in this neuron
         std::vector<InputPair> input_vector;        
@@ -85,7 +112,9 @@ namespace nl {
         /// Threshold value.
         Block* threshold;        
         /// Transfer function reference
-        TransferFn& transfer_fn;
+        TransferFn* transfer_fn;
+
+        friend class boost::serialization::access;
     };
 
 

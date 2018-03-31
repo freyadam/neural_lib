@@ -3,6 +3,8 @@
 
 #include <cmath>
 #include <algorithm>
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/base_object.hpp>
 
 #include "exceptions.hpp"
 
@@ -15,8 +17,7 @@ namespace nl {
         virtual float forward(float x) = 0;
         /// Computes derivative in given value.
         virtual float backward(float x) = 0;
-    };
-
+    };    
 
     /// Softmax transfer function
     class Sigmoid : public TransferFn {
@@ -79,19 +80,33 @@ namespace nl {
         }
     };
 
+    /// Class that holds instances of all implemented transfer function
+    /// classes. Static get() function returns correct transfer function
+    /// based on its name. There is no reason to create an instance of this
+    /// class.
     class TransferFns {
     public:
-        static TransferFn & get(std::string name) {
+        ///
+        /// Get reference to transfer function based on its name
+        /// Valid names:
+        /// "sigmoid" ... Sigmoid
+        /// "tanh" ... Tanh
+        /// "relu" ... ReLU
+        /// "softplus" ... Softplus
+        /// "linear" ... Linear
+        /// @param name name of the transfer functions
+        /// 
+        static TransferFn* get(std::string name) {
             if (name == "sigmoid")
-                return sigmoid;
+                return &sigmoid;
             else if (name == "tanh") 
-                return tanh;
+                return &tanh;
             else if (name == "relu")
-                return relu;
+                return &relu;
             else if (name == "softplus")
-                return softplus;
+                return &softplus;
             else if (name == "linear")
-                return linear;
+                return &linear;
             else
                 throw UnknownOptionException();
         }
@@ -106,3 +121,5 @@ namespace nl {
 } // namespace nl
 
 #endif // NEURAL_LIB_TRANSFER_FN_H
+
+

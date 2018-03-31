@@ -8,6 +8,7 @@ namespace nl {
     /// on an oriented graph. Generally that means there is a cycle present.
     /// 
     struct TopologicalException : public std::exception {
+        /// Return brief message about the reason of this exception.
         const char * what() const throw () {
             return "Topological order could not be created.";
         }
@@ -18,6 +19,7 @@ namespace nl {
     /// present object.
     ///
     struct DuplicityException : public std::exception {
+        /// Return brief message about the reason of this exception.
         const char * what() const throw () {
             return "Object with the same name is already present.";
         }
@@ -29,6 +31,7 @@ namespace nl {
     /// provided block does not fit these parameters.
     ///
     struct DimensionException : public std::exception {
+        /// Return brief message about the reason of this exception.
         const char * what() const throw () {
             return "Dimension mismatch.";
         }
@@ -39,6 +42,7 @@ namespace nl {
     /// if you pick a transfer function that is not implemented.    
     ///
     struct UnknownOptionException : public std::exception {
+        /// Return brief message about the reason of this exception.
         const char * what() const throw () {
             return "Given option is not on the list of possible choices.";
         }
@@ -48,6 +52,7 @@ namespace nl {
     /// Input failure. Most likely because input was malformed in some way.
     ///
     struct InputException : public std::exception {
+        /// Return brief message about the reason of this exception.
         const char * what() const throw () {
             return "Input failure.";
         }

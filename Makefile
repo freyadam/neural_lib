@@ -27,7 +27,7 @@ $(LIB): $(LIB_OBJECTS)
 
 $(MAIN): $(OBJ)/main.o
 	@mkdir -p $(BIN)
-	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@  -Lbin -lneural
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@  -Lbin -lneural -lboost_serialization
 
 $(OBJECTS): $(OBJ)/%.o : $(SRC)/%.cpp $(wildcard $(SRC)/*.hpp)
 	@mkdir -p $(OBJ)

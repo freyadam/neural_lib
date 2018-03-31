@@ -15,6 +15,12 @@
 
 namespace nl {
 
+    ///
+    /// Reader that loads data into its own block(s) from a specified
+    /// csv file. Single forward() call reads and stores a single line
+    /// from file. When end of file is reached, reader starts again from
+    /// the beginning.
+    /// 
     class CsvReader : public Op {
     public:
         /// Constructor 
@@ -51,6 +57,12 @@ namespace nl {
         std::string file_addr;
     };
 
+    /// 
+    /// Reader that loads images to its block of its own creation.
+    /// Images are specified in a text file where each line should contain
+    /// exactly one image address. When reader reaches end of text file,
+    /// it starts again from the beginning.
+    ///
     class ImgReader : public Op {
     public:
         /// Constructor

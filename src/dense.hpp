@@ -67,7 +67,7 @@ namespace nl {
         /// Threshold block
         Block* threshold;
         /// Transfer function reference
-        TransferFn& transfer_fn;
+        TransferFn* transfer_fn;
     }; 
 
 } // namespace nl

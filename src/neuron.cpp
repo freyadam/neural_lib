@@ -142,12 +142,12 @@ namespace nl {
 
         x += threshold->data;
 
-        output->data(0,0,0) = transfer_fn.forward(x(0,0,0));
+        output->data(0,0,0) = transfer_fn->forward(x(0,0,0));
     }
 
     void Neuron::backward() {
         Eigen::Tensor<float, 3> grad = 
-            output->grad * transfer_fn.backward(output->data(0,0,0));
+            output->grad * transfer_fn->backward(output->data(0,0,0));
 
         for (auto & p : input_vector) {    
             // propagate gradient to input block 

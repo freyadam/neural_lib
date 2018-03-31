@@ -112,7 +112,7 @@ namespace nl {
 
                     // apply transfer function
                     output->data(to.x, to.y, to.z)
-                        = transfer_fn.backward(output->data(to.x, to.y, to.z));
+                        = transfer_fn->forward(output->data(to.x, to.y, to.z));
                     
                 }            
             }            
@@ -143,7 +143,7 @@ namespace nl {
             for (uint16_t j = 0; j < to_w; ++j) {
                 for (uint16_t k = 0; k < to_h; ++k) {
                     grad(i,j,k) = output->grad(i,j,k) *
-                        transfer_fn.backward(output->data(i,j,k));
+                        transfer_fn->backward(output->data(i,j,k));
                 }   
             }   
         }

@@ -11,6 +11,12 @@
 
 namespace nl {
 
+    /// 
+    /// Softmax class, takes a block of any dimension and outputs a bloc
+    /// of the same dimension weighted using the softmax function which
+    /// is in more details specified here: 
+    /// https://en.wikipedia.org/wiki/Softmax_function
+    ///
     class Softmax : public Op {
     public:
 

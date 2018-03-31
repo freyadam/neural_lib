@@ -11,6 +11,7 @@
 #include "op.hpp"
 #include "random.hpp"
 #include "reader.hpp"
+#include "serialization.hpp"
 #include "softmax.hpp"
 #include "solver.hpp"
 #include "transfer_fns.hpp"

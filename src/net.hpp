@@ -11,6 +11,13 @@
 
 namespace nl {
 
+    ///
+    /// Class representing networks of operations. Operations are created
+    /// outside of the instance of network and then added. Net builds a 
+    /// DAG and based on it, it can compute all operations in correct order.
+    /// Note that Net is a child of Op so you can recursively add networks 
+    /// into other networks.
+    ///
 	class Net : public Op {	
     public:
         /// Constructor
@@ -19,9 +26,9 @@ namespace nl {
         /// @param op pointer to operation.
 		void add(Op* op);
 
-        void forward();
+        virtual void forward();
 
-        void backward();
+        virtual void backward();
 
         virtual block_map inputs();
 

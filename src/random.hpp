@@ -8,15 +8,22 @@
 
 namespace nl {
 
-    // random number generator
+    /// Random number generator wrapper class.
     class Generator {
     public:
+        /// Get a single random float from uniform distribution [-1,1]
         static float get() {
             return uniform(gen);
         }
-        static std::random_device gen;
-        static std::uniform_real_distribution<float> uniform;
+        ///
+        /// Fill data tensor of block with random float from uniform
+        /// distribution [-1,1]
+        /// @param block block which data tensor needs to be generated  
         static void init_random(Block* block);
+        /// random number generator 
+        static std::random_device gen;
+        /// Uniform distribution float number generator
+        static std::uniform_real_distribution<float> uniform;
     };
 }
 

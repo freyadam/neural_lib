@@ -1,4 +1,3 @@
-
 #ifndef NEURAL_LIB_GRAPH_TEST_H
 #define NEURAL_LIB_GRAPH_TEST_H
 

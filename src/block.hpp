@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 #include <Eigen/unsupported/CXX11/Tensor>
 
 namespace nl {
@@ -29,16 +31,19 @@ namespace nl {
             zero_grad();
         }
 
+        /// Default constructor. Provided primarily for serialization purposes.
+        Block(): Block("default_name", 1, 1, 1) {};
+
         ///
         /// Name of the block. Must be unique within a single network
-        /// as it is used as a identifier.
+        /// as it is used as an identifier.
         /// 
-		const std::string name;
+		std::string name;
 
         /// Dimension vector of both data and gradient tensor in better 
         /// format than the default Eigen::Tensor<float, 3>::Dimensions.
         /// @return dimension vector 
-        std::vector<uint16_t> dimensions() {
+        std::vector<uint16_t> dimensions() const {
             std::vector<uint16_t> v;
             
             for (auto & d : data.dimensions()) {
@@ -71,6 +76,68 @@ namespace nl {
         /// 
         bool trainable = false;
 
+        friend class boost::serialization::access;
+
+        template<class Archive>
+        void save(Archive & ar, const unsigned int) const
+        {
+            // save name and 'trainable' flag
+            ar & name;
+            ar & trainable;
+            // save dimensions of tensor
+            auto dims = data.dimensions();
+            ar & dims[0];
+            ar & dims[1];
+            ar & dims[2];
+            // save contents of data tensor
+            for (uint16_t i = 0; i < dims[0]; i++) {
+                for (uint16_t j = 0; j < dims[1]; j++) {
+                    for (uint16_t k = 0; k < dims[2]; k++) {
+                        ar & data(i,j,k);
+                    }
+                }
+            }
+            // save contents of grad tensor
+            for (uint16_t i = 0; i < dims[0]; i++) {
+                for (uint16_t j = 0; j < dims[1]; j++) {
+                    for (uint16_t k = 0; k < dims[2]; k++) {
+                        ar & grad(i,j,k);
+                    }
+                }
+            }
+        }
+
+        template<class Archive>
+        void load(Archive & ar, const unsigned int)
+        {
+            // load name and 'trainable' flag
+            ar & name;
+            ar & trainable;
+            // load dimensions of tensor
+            uint16_t depth, width, height;
+            ar & depth;
+            ar & width;
+            ar & height;
+            // create tensors
+            data = Eigen::Tensor<float,3>(depth, width, height);
+            grad = Eigen::Tensor<float,3>(depth, width, height);
+            // load data to tensors
+            for (uint16_t i = 0; i < depth; i++) {
+                for (uint16_t j = 0; j < width; j++) {
+                    for (uint16_t k = 0; k < height; k++) {
+                        ar & data(i,j,k);
+                    }
+                }
+            }
+            for (uint16_t i = 0; i < depth; i++) {
+                for (uint16_t j = 0; j < width; j++) {
+                    for (uint16_t k = 0; k < height; k++) {
+                        ar & grad(i,j,k);
+                    }
+                }
+            }
+        }
+        BOOST_SERIALIZATION_SPLIT_MEMBER()
 	};
    
     typedef std::unordered_map<std::string, Block*> block_map;    
