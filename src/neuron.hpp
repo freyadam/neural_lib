@@ -50,6 +50,9 @@ namespace nl {
         Neuron(std::string name, std::string fn_name, Block* input, Args... args):
             Neuron(name, fn_name, args...) {
 
+            if (input == nullptr)
+            throw nl::InputException();
+
             // check that input is of correct dimension
             auto dims = input->dimensions();
             if (dims[0] != 1 || dims[1] != 1 || dims[2] != 1 ||

@@ -6,6 +6,7 @@
 #include "error.hpp"
 #include "exceptions.hpp"
 #include "graph.hpp"
+#include "maxpool.hpp"
 #include "net.hpp"
 #include "neuron.hpp"
 #include "op.hpp"

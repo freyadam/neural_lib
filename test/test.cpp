@@ -4,6 +4,7 @@
 #include "test_block.hpp"
 #include "test_dense.hpp"
 #include "test_graph.hpp"
+#include "test_maxpool.hpp"
 #include "test_net.hpp"
 #include "test_neuron.hpp"
 #include "test_reader.hpp"

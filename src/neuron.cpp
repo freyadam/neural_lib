@@ -6,6 +6,9 @@ namespace nl {
     Neuron::Neuron(std::string name, std::string fn_name, Op* op):
         Op(name), transfer_fn(TransferFns::get(fn_name)) {                        
 
+        if (op == nullptr)
+            throw nl::InputException();
+
         // check that previous operation has exactly a single output block
         if (op->outputs().size() != 1)
             throw InputException();
@@ -52,6 +55,11 @@ namespace nl {
     Neuron::Neuron(std::string name, std::string fn_name, std::vector<Block *> inputs):
         Op(name), transfer_fn(TransferFns::get(fn_name)) {                        
             
+        for (auto input : inputs) {
+            if (input == nullptr)
+                throw nl::InputException();
+        }
+
         // process inputs
         for (auto & input : inputs) {
 
@@ -94,6 +102,9 @@ namespace nl {
 
     Neuron::Neuron(std::string name, std::string fn_name, Block* input):
         Op(name), transfer_fn(TransferFns::get(fn_name)) {                        
+
+        if (input == nullptr)
+            throw nl::InputException();
 
         // check that input is of correct dimension
         auto dims = input->dimensions();
