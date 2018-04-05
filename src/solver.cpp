@@ -3,9 +3,22 @@
 
 namespace nl {
 
+    Solver::Solver(Net* net, Block* output_block, Block* desired_block):
+        net(net), lr(0.1), 
+        nesterov(false), 
+        decay_factor(0.1), cycle_length(1000), steps_without_change(0) {
+        output.push_back(output_block);
+        desired.push_back(desired_block);            
+    }
+
     float Solver::train(uint16_t cycles) {
 
         for (uint16_t i = 0; i < cycles; ++i) {
+
+            // possibly update learning rate
+            if (steps_without_change >= cycle_length)
+                lr *= decay_factor;
+            steps_without_change++;
 
             // zero out gradient from previous cycle
             for (auto & block_pair : net->blocks) {
@@ -18,13 +31,11 @@ namespace nl {
                 
             // compute error gradient on the op output and 
             // save it in the output blocks
-            // std::vector<Eigen::Tensor<float, 3>> grads = 
-            Eigen::Tensor<float,3> grad = 
-                Error::L2_grad(output[0], desired[0]);
-            // for (uint16_t i = 0; i < output.size(); ++i) {
-            //     output[i]->grad = grads[i];
-            // }
-            output[0]->grad = grad;
+            std::vector<Eigen::Tensor<float,3>> grads = 
+                Error::L2_grad(output, desired);
+            for (uint16_t i = 0; i < output.size(); ++i) {
+                output[i]->grad = grads[i];
+            }
 
             // backward
             net->backward();
@@ -38,6 +49,22 @@ namespace nl {
         }
 
         return Error::L2(output, desired);
+    }
+
+    void Solver::setMethod(std::string name) {
+        
+        if (name == "sgd")
+            nesterov = false;
+        else if (name == "nesterov")
+            nesterov = true;
+        else
+            throw InputException();
+
+    }
+
+    void Solver::setLRDecay(float multiplier, uint16_t period) {
+        decay_factor = multiplier;
+        cycle_length = period;            
     }
 
 } // namespace nl
