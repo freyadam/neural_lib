@@ -24,7 +24,7 @@ namespace nl {
         /// @param name name of the softmax op
         /// @param op previous operation with only a single one output block of
         /// correct dimension
-        Softmax(std::string name, Op* op); // TODO change to Op*
+        Softmax(std::string name, Op* op);
 
         /// Constructor.
         /// @param name name of the softmax op

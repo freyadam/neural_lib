@@ -114,7 +114,7 @@ namespace nl {
         Block* output;
         /// Threshold value.
         Block* threshold;        
-        /// Transfer function reference
+        /// Transfer function
         TransferFn* transfer_fn;
 
         friend class boost::serialization::access;

@@ -1,12 +1,32 @@
 
-#ifndef NEURAL_LIB_MAXPOOL_H
-#define NEURAL_LIB_MAXPOOL_H
+#ifndef NEURAL_LIB_CONV_H
+#define NEURAL_LIB_CONV_H
+
+#include <vector>
+
+#include "block.hpp"
+#include "op.hpp"
+#include "random.hpp"
+#include "transfer_fns.hpp"
 
 namespace nl {
 
+    ///
+    /// Convolutional layer. All output cells depend only on a spatially 
+    /// limited part of input block. Additionaly, they all share the same
+    /// weight vector.
+    ///
     class Conv : public Op {
     public:
     
+        Conv(std::string name, std::string fn_name, Block* input, 
+             uint16_t output_depth,
+             uint16_t window_size, uint16_t padding_size=0, uint16_t stride=1);
+
+        Conv(std::string name, std::string fn_name, Op* op, 
+             uint16_t output_depth,
+             uint16_t window_size, uint16_t padding_size=0, uint16_t stride=1);
+
         virtual void forward();
 
         virtual void backward();
@@ -16,14 +36,41 @@ namespace nl {
         virtual block_map inputs();
     
     private:        
+        /// Shared init method
+        void init(uint16_t input_depth);
+        /// compute weighted sum for single cell specified by its position
+        /// @param d coordinate in first dimension
+        /// @param w coordinate in second dimension
+        /// @param h coordinate in third dimension
+        /// @return weighted sum for a given "window"
+        float weighted_sum(uint16_t d, uint16_t w, uint16_t h);
+        ///
+        /// Update the gradient of all weights for given depth slice and 
+        /// the gradient of all input cells given single output cell gradient
+        /// @param grad gradient of output cell before non-linearity applied
+        /// @param x coordinate in first dimension of output cell
+        /// @param y coordinate in second dimension of output cell
+        /// @param z coordinate in third dimension of output cell
+        /// 
+        void grad_window_update(float grad, uint16_t x, uint16_t y, uint16_t z);
         /// Input block
         Block* input;
         /// Output block
         Block* output;
-        /// Block of weights identical to all cell in output block.
-        Block* kernel;
-        /// Block of dimension (1,1,1) representing threshold for neuron.
-        Block* threshold;
+        ///
+        /// All weights for a single depth slice, that is cells with 
+        /// the same depth.
+        ///
+        struct WeightPair {
+            /// Block of weights identical for all cells in single 
+            /// output depth slice, 
+            Block* kernel;
+            /// Blocks of dimension (1,1,1) representing thresholds for indivudual 
+            /// depth slice.
+            Block* threshold;                
+        };
+        /// Weights belonging to output depth slices 
+        std::vector<WeightPair> weights;
         ///
         /// Window size
         /// The window is rectangular and two-dimensional so 
@@ -49,8 +96,10 @@ namespace nl {
         /// both dimensions of movement. 
         /// 
         uint16_t stride;
+        /// Transfer function
+        TransferFn* transfer_fn;
     };
 
 } // namespace nl
 
-#endif // NEURAL_LIB_MAXPOOL_H
+#endif // NEURAL_LIB_CONV_H

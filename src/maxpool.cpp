@@ -26,7 +26,7 @@ namespace nl {
 
         // create output
         output = new Block(name + "_out",
-                           input_dims[0],
+                           input_dims[0], // same depth as input block
                            input_dims[1] + 2 * padding_size - (window_size - 1),
                            input_dims[2] + 2 * padding_size - (window_size - 1));
         owned.push_back(output);
