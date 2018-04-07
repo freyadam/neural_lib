@@ -69,6 +69,22 @@ namespace nl {
         Block* threshold;
         /// Transfer function reference
         TransferFn* transfer_fn;
+
+        // Default constructor, for serialization
+        Dense(): Op("default_name") {}                 
+
+        template<class Archive>
+        void serialize(Archive & ar, const unsigned int version)
+        {
+            ar & boost::serialization::base_object<nl::Op>(*this);
+            ar & input;
+            ar & output;
+            ar & weight;
+            ar & threshold;
+            ar & transfer_fn;
+        }
+        friend class boost::serialization::access;
+
     }; 
 
 } // namespace nl

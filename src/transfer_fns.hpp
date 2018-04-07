@@ -17,6 +17,10 @@ namespace nl {
         virtual float forward(float x) = 0;
         /// Computes derivative in given value.
         virtual float backward(float x) = 0;
+        // vestigial serialization 
+        friend class boost::serialization::access;
+        template<class Archive>
+        void serialize(Archive & ar, const unsigned int version) {}
     };    
 
     /// Softmax transfer function
@@ -29,6 +33,12 @@ namespace nl {
         virtual float backward(float x) {
             float sigm = forward(x);
             return sigm * (1 - sigm);
+        }
+        // vestigial serialization
+        friend class boost::serialization::access;
+        template<class Archive>
+        void serialize(Archive & ar, const unsigned int version) {
+            ar & boost::serialization::base_object<nl::TransferFn>(*this);
         }
     };
 
@@ -44,6 +54,12 @@ namespace nl {
         virtual float backward(float x) {
             return std::pow(2.0 / (std::exp(x) + std::exp(-x)), 2);
         }
+        // vestigial serialization
+        friend class boost::serialization::access;
+        template<class Archive>
+        void serialize(Archive & ar, const unsigned int version) {
+            ar & boost::serialization::base_object<nl::TransferFn>(*this);
+        }
     };
 
     /// Rectified Linear Unit transfer function.
@@ -56,6 +72,12 @@ namespace nl {
         virtual float backward(float x) {
             return (x > 0) ? 1 : 0;
         }
+        // vestigial serialization
+        friend class boost::serialization::access;
+        template<class Archive>
+        void serialize(Archive & ar, const unsigned int version) {
+            ar & boost::serialization::base_object<nl::TransferFn>(*this);
+        }
     };
 
     /// Softplus transfer function.
@@ -67,6 +89,12 @@ namespace nl {
         virtual float backward(float x) {
             return 1.0 / (1.0 + std::exp(-x));
         }
+        // vestigial serialization
+        friend class boost::serialization::access;
+        template<class Archive>
+        void serialize(Archive & ar, const unsigned int version) {
+            ar & boost::serialization::base_object<nl::TransferFn>(*this);
+        }
     };
 
     /// Linear transfer function.
@@ -77,6 +105,12 @@ namespace nl {
 
         virtual float backward(float) {
             return 1.0;
+        }
+        // vestigial serialization
+        friend class boost::serialization::access;
+        template<class Archive>
+        void serialize(Archive & ar, const unsigned int version) {
+            ar & boost::serialization::base_object<nl::TransferFn>(*this);
         }
     };
 

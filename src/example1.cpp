@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
     // 'o' specifies the net result
     // 'd' specified the desired output
     nl::Solver solver(&net, &o, &d);
+    // solver.setMethod("nesterov"); // use training with momentum
 
     // define hyperplane parameters that should be learned
     float a=3, b=-2, c=4;

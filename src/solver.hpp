@@ -2,6 +2,9 @@
 #define NEURAL_LIB_SOLVER_H
 
 #include <vector>
+#include <unordered_map>
+
+#include <Eigen/unsupported/CXX11/Tensor>
 
 #include "block.hpp"
 #include "net.hpp"
@@ -50,6 +53,18 @@ namespace nl {
         void setLRDecay(float multiplier, uint16_t period);
     private:
         ///
+        /// Single training cycle as defined by the method "train"
+        /// using Stochastic Gradient Descent.
+        /// 
+        float train_sgd(uint16_t cycles);
+        ///
+        /// Single training cycle as defined by the method "train"
+        /// using Nesterov Gradient Descent with Momentum.
+        ///         
+        float train_nesterov(uint16_t cycles);
+        /// Initialize momentum map.
+        void init_momentum();
+        ///
         /// Network that is being 
         /// trained by the solver.
         ///
@@ -70,6 +85,18 @@ namespace nl {
         uint16_t cycle_length;
         /// Number of gradient updates without learning rate change.
         uint16_t steps_without_change;
+        ///
+        /// How much of the previos momentum term is preserved to the next
+        /// iteration.
+        ///
+        float inertia = 0.9;
+        ///
+        /// Tensors holding momentum for each trainable block in the
+        /// network. Initialized and used just for momemtum methods, 
+        /// currently only Nesterov. Each tensor is identified by 
+        /// a name of its corresponding block.
+        /// 
+        std::unordered_map<std::string, Eigen::Tensor<float,3>> momentum;        
     };
 
 

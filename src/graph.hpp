@@ -7,6 +7,12 @@
 #include <cassert>
 #include <algorithm>
 
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/unordered_map.hpp>
+#include <boost/serialization/vector.hpp>
+
 #include "exceptions.hpp"
 
 using namespace std;
@@ -42,7 +48,8 @@ namespace nl {
         };
 
         /// Structure representing a single vertex in the graph
-        struct Vertex {
+        class Vertex {
+        public:
             /// constructor
             /// @param name of the new vertex
             Vertex(string name): name(name), mark(Mark::NONE) {}
@@ -51,6 +58,23 @@ namespace nl {
             vector<Vertex*> outgoing; /// outgoing edges
             vector<Vertex*> incoming; /// incoming edges
             Mark mark; /// used during topogical sort
+
+            // Default constructor, for serialization purposes
+            Vertex(): Vertex("default_name") {}
+
+            // serialization code
+            template<class Archive>
+            void serialize(Archive & ar, const unsigned int version)
+            {
+                ar & name;
+                ar & mark;
+                // to get rid of an "boost::archive::archive_exception"
+                // pointer conflict, 'outgoing' and 'incoming' vertices
+                // need to be serialized separately
+                // For a reasoning, check for example:
+                // http://www.bnikolic.co.uk/blog/cpp-boost-ser-conflict.html
+            }
+            friend class boost::serialization::access;
         };
 
         ///
@@ -63,7 +87,28 @@ namespace nl {
 
         /// Vector of all vertices in a graph
         unordered_map<string, Vertex> vertices;
+            
+        template<class Archive>
+        void serialize(Archive & ar, const unsigned int version)
+        {
+            ar & vertices;
 
+            // get all keys in vertices
+            std::vector<std::string> keys;
+            for (auto & pair : vertices) 
+                keys.push_back(pair.first);
+
+            // sort keys 
+            std::sort(keys.begin(), keys.end());
+
+            for (auto & key : keys) {
+                ar & vertices[key].incoming;
+                ar & vertices[key].outgoing;
+            }
+            
+        }
+
+        friend class boost::serialization::access;
     };
 
 } // namespace nl

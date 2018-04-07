@@ -1,6 +1,8 @@
 
 #include "gtest/gtest.h"
 
+#include "neural.hpp"
+
 #include "test_block.hpp"
 #include "test_conv.hpp"
 #include "test_dense.hpp"

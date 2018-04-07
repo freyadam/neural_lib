@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <iostream>
 #include <boost/serialization/base_object.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/export.hpp>
 #include <boost/serialization/vector.hpp>
 
 #include "random.hpp"
@@ -81,6 +83,12 @@ namespace nl {
 
         virtual block_map inputs();
 
+    private:
+        friend class boost::serialization::access;
+
+        // Default constructor, for serialization purposes
+        Neuron(): Op("default_name") {}
+
         template<class Archive>
         void serialize(Archive & ar, const unsigned int version)
         {
@@ -88,13 +96,13 @@ namespace nl {
             ar & input_vector;
             ar & output;
             ar & threshold;
-            // ar & transfer_fn;   // TODO serialize transfer functions
+            ar & transfer_fn;
         }
-
-    private:
 
         /// Input block and weight pair
         struct InputPair {
+            friend class boost::serialization::access;
+
             Block* input; /// input from previous layer
             Block* weight; /// corresponding weight
 
@@ -104,8 +112,6 @@ namespace nl {
                 ar & input;
                 ar & weight;
             }
-
-            friend class boost::serialization::access;
         };
         /// All pairs input/weight used in this neuron
         std::vector<InputPair> input_vector;        
@@ -116,8 +122,6 @@ namespace nl {
         Block* threshold;        
         /// Transfer function
         TransferFn* transfer_fn;
-
-        friend class boost::serialization::access;
     };
 
 

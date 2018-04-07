@@ -5,6 +5,9 @@
 #include <unordered_map>
 #include <vector>
 
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/unordered_map.hpp>
+
 #include "op.hpp"
 #include "block.hpp"
 #include "graph.hpp"
@@ -58,6 +61,21 @@ namespace nl {
         /// Sequence of operations that describes order of computation
         /// in forward pass. Everything is reversed in backward pass
         std::vector<Op*> ordering;
+        
+        // Default constructor, for serialization purposes
+        Net(): Op("default_name") {}
+
+        template<class Archive>
+        void serialize(Archive & ar, const unsigned int version)
+        {
+            ar & boost::serialization::base_object<nl::Op>(*this);
+            ar & blocks;
+            ar & ops;
+            ar & g;
+            ar & changed;
+            ar & ordering;
+        }
+        friend class boost::serialization::access;
 	};
 
 } // namespace nl

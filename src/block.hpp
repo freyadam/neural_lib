@@ -31,9 +31,6 @@ namespace nl {
             zero_grad();
         }
 
-        /// Default constructor. Provided primarily for serialization purposes.
-        Block(): Block("default_name", 1, 1, 1) {};
-
         ///
         /// Name of the block. Must be unique within a single network
         /// as it is used as an identifier.
@@ -75,6 +72,10 @@ namespace nl {
         /// set to false for blocks holding data passed through net.
         /// 
         bool trainable = false;
+private:
+
+        /// Default constructor. Provided primarily for serialization purposes.
+        Block(): Block("default_name", 1, 1, 1) {};
 
         friend class boost::serialization::access;
 
