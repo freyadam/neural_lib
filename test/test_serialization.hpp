@@ -21,7 +21,7 @@ TEST(SerializationTest, Block) {
     b.grad(0,0,1) = 3e12;
 
     // save block
-    std::string filename = "test.txt";
+    std::string filename = "test/block_serialization_test.txt";
     {
         std::ofstream ofs(filename);
         boost::archive::text_oarchive oa(ofs);
@@ -62,7 +62,7 @@ TEST(SerializationTest, Dense) {
     d1.inputs()["d1_thr"]->data(0,0,0) = 2;     
 
     // save layer
-    std::string filename = "test.txt";
+    std::string filename = "test/dense_serialization_test.txt";
     {
         std::ofstream ofs(filename);
         boost::archive::text_oarchive oa(ofs);
@@ -98,6 +98,97 @@ TEST(SerializationTest, Dense) {
 
 }
 
+TEST(SerializationTest, Conv) {
+
+    nl::Block b("b", 1, 1, 1);
+    nl::Conv c1("c1", "relu", &b,
+                 2, 3, 1);
+
+    c1.inputs()["c1_w1"]->data(0,1,1) = 3;
+    c1.inputs()["c1_thr1"]->data(0,0,0) = 2;     
+
+    // save layer
+    std::string filename = "test/conv_serialization_test.txt";
+    {
+        std::ofstream ofs(filename);
+        boost::archive::text_oarchive oa(ofs);
+        oa << c1;
+    }
+    // load layer
+    nl::Conv c2("c2", "linear", &b,
+                 1, 1);
+    {
+        std::ifstream ifs(filename);
+        boost::archive::text_iarchive ia(ifs);
+        ia >> c2; 
+    }
+
+    // net name
+    EXPECT_STREQ(c2.name.c_str(), "c1");
+
+    // inputs
+    EXPECT_EQ(c2.inputs().size(), 5);
+    EXPECT_NE(c2.inputs()["c1_thr0"], nullptr);
+    EXPECT_NE(c2.inputs()["c1_w0"], nullptr);
+    EXPECT_NE(c2.inputs()["c1_thr1"], nullptr);
+    EXPECT_NE(c2.inputs()["c1_w1"], nullptr);
+    EXPECT_NE(c2.inputs()["b"], nullptr);
+
+    // outputs
+    EXPECT_EQ(c2.outputs().size(), 1);
+    EXPECT_NE(c2.outputs()["c1_out"], nullptr);
+        
+    c2.inputs()["b"]->data(0,0,0) = 1;
+    c2.forward();
+    EXPECT_FLOAT_EQ(c2.outputs()["c1_out"]->data(1,0,0), 5);
+
+    c2.inputs()["b"]->data(0,0,0) = -1;
+    c2.forward();
+    EXPECT_FLOAT_EQ(c2.outputs()["c1_out"]->data(1,0,0), 0);
+}
+
+TEST(SerializationTest, MaxPool) {
+
+        nl::Block b("b", 1, 2, 2);
+    nl::MaxPool m1("m1", &b, 2);
+
+    // save layer
+    std::string filename = "test/maxpool_serialization_test.txt";
+    {
+        std::ofstream ofs(filename);
+        boost::archive::text_oarchive oa(ofs);
+        oa << m1;
+    }
+    // load layer
+    nl::MaxPool m2("m2", &b, 1);
+    {
+        std::ifstream ifs(filename);
+        boost::archive::text_iarchive ia(ifs);
+        ia >> m2; 
+    }
+
+    // inputs
+    EXPECT_EQ(m2.inputs().size(), 1);
+    EXPECT_NE(m2.inputs()["b"], nullptr);
+
+    // outputs
+    EXPECT_EQ(m2.outputs().size(), 1);
+    EXPECT_NE(m2.outputs()["m1_out"], nullptr);
+        
+    nl::Block* out = m2.outputs()["m1_out"];
+    auto out_dims = out->dimensions();
+    EXPECT_EQ(out_dims[0], 1);
+    EXPECT_EQ(out_dims[1], 1);
+    EXPECT_EQ(out_dims[2], 1);
+
+    m2.inputs()["b"]->data(0,0,0) = 1;
+    m2.inputs()["b"]->data(0,0,1) = -1;
+    m2.inputs()["b"]->data(0,1,0) = 3;
+    m2.inputs()["b"]->data(0,1,1) = -1e3;
+    m2.forward();
+    EXPECT_EQ(m2.outputs()["m1_out"]->data(0,0,0), 3);
+}
+
 TEST(SerializationTest, Net) {
 
     nl::Block b("b", 1, 1, 1);
@@ -119,7 +210,7 @@ TEST(SerializationTest, Net) {
     net.add(&n1);
 
     // save net
-    std::string filename = "net_serialization_test.txt";
+    std::string filename = "test/net_serialization_test.txt";
     {
         std::ofstream ofs(filename);
         boost::archive::text_oarchive oa(ofs);
@@ -159,5 +250,80 @@ TEST(SerializationTest, Net) {
     EXPECT_FLOAT_EQ(net2.outputs()["n2_out"]->data(0,0,0), 0);
 
 }
+
+TEST(SerializationTest, CsvReader) {
+
+
+    nl::CsvReader r("reader", "test/csv/valid.csv");
+    nl::Net n("net");
+    n.add(&r);
+    
+    // save net
+    std::string filename = "test/csvreader_serialization_test.txt";
+    {
+        std::ofstream ofs(filename);
+        boost::archive::text_oarchive oa(ofs);
+        oa << n;
+    }
+    // load net
+    nl::Net n2("net2");
+    {
+        std::ifstream ifs(filename);
+        boost::archive::text_iarchive ia(ifs);
+        ia >> n2; 
+    }
+    
+    EXPECT_EQ(n2.name, "net");
+    EXPECT_NE(n2.outputs()["reader_out"], nullptr);
+
+    n2.forward();
+    EXPECT_FLOAT_EQ(n2.outputs()["reader_out"]->data(0,0,1), 2.3);
+
+    n2.forward();
+    EXPECT_FLOAT_EQ(n2.outputs()["reader_out"]->data(0,0,1), -6);
+
+    n2.forward();
+    EXPECT_FLOAT_EQ(n2.outputs()["reader_out"]->data(0,0,1), -1.23e-1);
+
+    n2.forward();
+    EXPECT_FLOAT_EQ(n2.outputs()["reader_out"]->data(0,0,1), 2.3);
+
+}
+
+
+TEST(SerializationTest, ImgReader) {
+
+    nl::ImgReader r("reader", "test/img/valid.csv");
+    nl::Net n("net");
+    n.add(&r);
+    
+    // save net
+    std::string filename = "test/imgreader_serialization_test.txt";
+    {
+        std::ofstream ofs(filename);
+        boost::archive::text_oarchive oa(ofs);
+        oa << n;
+    }
+    // load net
+    nl::Net n2("net2");
+    {
+        std::ifstream ifs(filename);
+        boost::archive::text_iarchive ia(ifs);
+        ia >> n2;               
+    }
+    
+    EXPECT_EQ(n2.name, "net");
+    EXPECT_NE(n2.outputs()["reader_out"], nullptr);
+        
+    n2.forward();
+    EXPECT_FLOAT_EQ(n2.outputs()["reader_out"]->data(0,12,12), 255);
+
+    n2.forward();
+    EXPECT_FLOAT_EQ(n2.outputs()["reader_out"]->data(0,12,12), 183);
+
+    n2.forward();
+    EXPECT_FLOAT_EQ(n2.outputs()["reader_out"]->data(0,12,12), 255);
+}
+
 
 #endif // NEURAL_LIB_SERIALIZATION_TEST_H

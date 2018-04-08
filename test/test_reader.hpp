@@ -29,34 +29,34 @@ TEST(CsvReaderTest, NoRecords) {
 TEST(CsvReaderTest, Valid) {
 
     nl::CsvReader r("reader", "test/csv/valid.csv");
-    nl::Block* o1 = r.outputs()["reader_out0"];
-    nl::Block* o2 = r.outputs()["reader_out1"];
+    nl::Block* o1 = r.outputs()["reader_out"];
 
     // second pass 
     r.forward();
     EXPECT_FLOAT_EQ(o1->data(0,0,0), 1.0);
-    EXPECT_FLOAT_EQ(o2->data(0,0,0), 2.3);
+    EXPECT_FLOAT_EQ(o1->data(0,0,1), 2.3);
 
     r.forward();
     EXPECT_FLOAT_EQ(o1->data(0,0,0), 3.12);
-    EXPECT_FLOAT_EQ(o2->data(0,0,0), -6);
+    EXPECT_FLOAT_EQ(o1->data(0,0,1), -6);
 
     r.forward();
     EXPECT_FLOAT_EQ(o1->data(0,0,0), 2e4);
-    EXPECT_FLOAT_EQ(o2->data(0,0,0), -1.23e-1);
+    EXPECT_FLOAT_EQ(o1->data(0,0,1), -1.23e-1);
 
     // second pass 
     r.forward();
     EXPECT_FLOAT_EQ(o1->data(0,0,0), 1.0);
-    EXPECT_FLOAT_EQ(o2->data(0,0,0), 2.3);
+    EXPECT_FLOAT_EQ(o1->data(0,0,1), 2.3);
 
     r.forward();
     EXPECT_FLOAT_EQ(o1->data(0,0,0), 3.12);
-    EXPECT_FLOAT_EQ(o2->data(0,0,0), -6);
+    EXPECT_FLOAT_EQ(o1->data(0,0,1), -6);
 
     r.forward();
     EXPECT_FLOAT_EQ(o1->data(0,0,0), 2e4);
-    EXPECT_FLOAT_EQ(o2->data(0,0,0), -1.23e-1);
+    EXPECT_FLOAT_EQ(o1->data(0,0,1), -1.23e-1);
+
 }
 
 // non-existing file
@@ -86,6 +86,6 @@ TEST(ImgReaderTest, DimMismatch) {
                  nl::DimensionException);
 }
 
-// forward TODO
+// TODO forward for ImgReader
 
 #endif // NEURAL_LIB_READER_TEST_H

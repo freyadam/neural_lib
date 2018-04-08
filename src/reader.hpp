@@ -8,6 +8,8 @@
 #include <unordered_map>
 
 #include "cimg/CImg.h"
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/base_object.hpp>
 
 #include "block.hpp"
 #include "op.hpp"
@@ -34,9 +36,7 @@ namespace nl {
         // Reader has no inputs and as such no place to propagate gradient to.
         void backward() {}
         
-        virtual block_map inputs() {
-            return block_map();
-        }
+        virtual block_map inputs();
 
         virtual block_map outputs();
 
@@ -47,14 +47,39 @@ namespace nl {
         /// 
         static const char delimiter = ',';
         
-        /// Vector of output blocks.
-        std::vector<Block*> output_blocks;
+        /// Output block
+        Block* output;
 
         /// Stream for reading individual lines
         std::ifstream line_stream;
 
         /// csv file address.
         std::string file_addr;
+
+        // default constructor, for serialization
+        CsvReader(): Op("default_name") {}
+
+        template<class Archive>
+        void save(Archive & ar, const unsigned int) const
+        {
+            ar & boost::serialization::base_object<nl::Op>(*this);
+            ar & output;
+            ar & file_addr;
+        }
+
+        template<class Archive>
+        void load(Archive & ar, const unsigned int)
+        {
+            ar & boost::serialization::base_object<nl::Op>(*this);
+            ar & output;
+            ar & file_addr;
+            // start reading from the beginning, state of reader within
+            // file is not preserved
+            line_stream = std::ifstream(file_addr, std::ifstream::in);
+        }
+        BOOST_SERIALIZATION_SPLIT_MEMBER()
+
+        friend class boost::serialization::access;
     };
 
     /// 
@@ -87,8 +112,9 @@ namespace nl {
             return m;
         }
 
-    private:
 
+
+    private:
         ///
         /// return next image address in list, 
         /// if end of file was reached start again from the beginning
@@ -103,6 +129,31 @@ namespace nl {
 
         /// address of text file with image addresses
         std::string file_addr;
+
+        // default constructor, for serialization
+        ImgReader(): Op("default_name") {}
+
+        template<class Archive>
+        void save(Archive & ar, const unsigned int) const
+        {
+            ar & boost::serialization::base_object<nl::Op>(*this);
+            ar & output_block;
+            ar & file_addr;
+        }
+
+        template<class Archive>
+        void load(Archive & ar, const unsigned int)
+        {
+            ar & boost::serialization::base_object<nl::Op>(*this);
+            ar & output_block;
+            ar & file_addr;
+            // start reading from the beginning, state of reader within
+            // file is not preserved
+            line_stream = std::ifstream(file_addr, std::ifstream::in);
+        }
+        BOOST_SERIALIZATION_SPLIT_MEMBER()
+
+        friend class boost::serialization::access;
     };
 
 

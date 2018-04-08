@@ -40,6 +40,7 @@ clean:
 	$(foreach object,$(OBJECTS), rm -f $(object)${\n})
 	rm -f $(TARGET)
 	rm -rf doc
+	rm test/*_serialization_test.txt
 
 doc:
 	@mkdir -p doc

@@ -46,10 +46,13 @@ namespace nl {
             ordering_is_current();
             return ordering;
         }
-    private:
+
         /// Make sure that ordering vector corresponds to current state
         /// of graph.
         void ordering_is_current();
+
+    private:
+
         /// Insert op and its corresponding input and output blocks 
         /// into maps 'ops' and 'blocks'
         void insert_into_maps(Op* op);
@@ -66,15 +69,29 @@ namespace nl {
         Net(): Op("default_name") {}
 
         template<class Archive>
-        void serialize(Archive & ar, const unsigned int version)
+        void save(Archive & ar, const unsigned int) const
         {
             ar & boost::serialization::base_object<nl::Op>(*this);
             ar & blocks;
             ar & ops;
             ar & g;
-            ar & changed;
             ar & ordering;
+            ar & changed;
         }
+
+        template<class Archive>
+        void load(Archive & ar, const unsigned int)
+        {
+            ar & boost::serialization::base_object<nl::Op>(*this);
+            ar & blocks;
+            ar & ops;
+            ar & g;
+            ar & ordering;
+            ar & changed;
+        }
+        BOOST_SERIALIZATION_SPLIT_MEMBER()
+
+
         friend class boost::serialization::access;
 	};
 

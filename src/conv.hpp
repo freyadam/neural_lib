@@ -68,6 +68,14 @@ namespace nl {
             /// Blocks of dimension (1,1,1) representing thresholds for indivudual 
             /// depth slice.
             Block* threshold;                
+
+            template<class Archive>
+            void serialize(Archive & ar, const unsigned int version)
+            {
+                ar & kernel;
+                ar & threshold;
+            }
+            friend class boost::serialization::access;
         };
         /// Weights belonging to output depth slices 
         std::vector<WeightPair> weights;
@@ -98,6 +106,23 @@ namespace nl {
         uint16_t stride;
         /// Transfer function
         TransferFn* transfer_fn;
+
+        // default constructor, for serialization
+        Conv(): Op("default_name") {}
+
+        template<class Archive>
+        void serialize(Archive & ar, const unsigned int version)
+        {
+            ar & boost::serialization::base_object<nl::Op>(*this);
+            ar & input;
+            ar & output;
+            ar & weights;
+            ar & window_size;
+            ar & padding_size;
+            ar & stride;
+            ar & transfer_fn;
+        }
+        friend class boost::serialization::access;
     };
 
 } // namespace nl

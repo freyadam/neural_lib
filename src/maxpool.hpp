@@ -85,6 +85,20 @@ namespace nl {
         /// @param h third coordinate of corner
         std::tuple<uint16_t, uint16_t, uint16_t>
         window_max_element(uint16_t d, int16_t w, int16_t h);
+
+        // default constructor, for serialization
+        MaxPool(): Op("default_name") {}
+
+        template<class Archive>
+        void serialize(Archive & ar, const unsigned int version)
+        {
+            ar & boost::serialization::base_object<nl::Op>(*this);
+            ar & input;
+            ar & output;
+            ar & window_size;
+            ar & padding_size;
+        }
+        friend class boost::serialization::access;
     };
 
 } // namespace nl

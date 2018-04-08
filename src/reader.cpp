@@ -22,11 +22,11 @@ namespace nl {
                                 
             if (!first_read) { // set number of records in first line
                 first_read = true;
-                record_count = std::count(line.begin(), line.end(), 
-                                          CsvReader::delimiter) + 1;
+                record_count = 1 + std::count(line.begin(), line.end(), 
+                                              CsvReader::delimiter);
 
                 // empty lines are not very interesting
-                if (record_count == 1)
+                if (line.find_first_not_of(" ") == std::string::npos) 
                     throw InputException();
 
             } else { // check that all lines contain the same number of records
@@ -47,16 +47,11 @@ namespace nl {
         if (!first_read)
             throw InputException();
 
-        // create 'record_count' number of 1x1x1 output blocks
-        for (uint16_t i = 0; i < record_count; ++i) {
-            Block* rec = new Block(name + "_out" + std::to_string(i),
-                                   1, 1, 1);
-            output_blocks.push_back(rec);
-            // output blocks with dumb pointers need to be deleted
-            owned.push_back(rec); 
-        }
+        // create output block of size 1x1xrecord_count
+        output = new Block(name + "_out", 1, 1, record_count);
+        owned.push_back(output); 
 
-        // initialize stream on the beginning of the file
+        // initialize stream to the beginning of the file
         line_stream = std::ifstream(file_addr, std::ifstream::in);
 
     }
@@ -65,7 +60,7 @@ namespace nl {
         std::string line;
 
         if (!std::getline(line_stream, line)) {
-            // issue with reading from file, not end of line
+            // issue with reading from file, not end of file
             if (!line_stream.eof()) {
                 throw InputException();
             }
@@ -81,18 +76,20 @@ namespace nl {
         uint16_t i = 0;
         while(std::getline(line_stream, record, 
                            CsvReader::delimiter)) {                
-            output_blocks[i]->data(0,0,0) = std::stof(record);
+            output->data(0,0,i) = std::stof(record);
             i++;
         }            
 
+    }
+    
+    block_map CsvReader::inputs() {
+        return block_map();
     }
 
     block_map CsvReader::outputs() {
         block_map m;
 
-        for (Block* b : output_blocks) {
-            m.insert(std::make_pair(b->name, b));
-        }
+        m.insert(std::make_pair(output->name, output));
 
         return m;
     }
@@ -131,6 +128,9 @@ namespace nl {
         // create output block            
         output_block = new Block(name + "_out", channel_no, width, height);
         owned.push_back(output_block);
+
+        // piece of code fixing boost::serialization bug/strange_edge_case
+        forward();
 
         // set beginning position in text file
         line_stream = std::ifstream(file_addr, std::ifstream::in);

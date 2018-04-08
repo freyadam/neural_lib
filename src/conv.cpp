@@ -3,7 +3,6 @@
 
 namespace nl {
 
-    // TODO zero threshold
     Conv::Conv(std::string name, std::string fn_name, Block* input, 
                uint16_t output_depth,
                uint16_t window_size, uint16_t padding_size, uint16_t stride):

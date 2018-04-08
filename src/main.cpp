@@ -6,6 +6,9 @@
 #include <string> 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/serialization/export.hpp>
 
 #include "neural.hpp"
 
@@ -14,36 +17,36 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 
-    nl::Block b("b", 1, 1, 1);
-    nl::Dense d1("d1", "relu", &b,
-                 2, 2, 2);
-
-    d1.inputs()["d1_w"]->data(0,0,0) = 3;
-    d1.inputs()["d1_thr"]->data(0,0,0) = 2;     
-
-    // save layer
-    std::string filename = "test.txt";
+    nl::ImgReader r("reader", "test/img/valid.csv");
+    nl::Net n("net");
+    n.add(&r);
+    
+    // save net
+    std::string filename = "imgreader_serialization_test.txt";
     {
         std::ofstream ofs(filename);
         boost::archive::text_oarchive oa(ofs);
-        oa << d1;
+        oa << n;
     }
-    // load layer
-    nl::Dense d2("d2", "linear", &b,
-                 1, 1, 1);
+    // load net
+    nl::Net n2("net2");
     {
         std::ifstream ifs(filename);
         boost::archive::text_iarchive ia(ifs);
-        ia >> d2; 
+        ia >> n2;               
     }
+    
+    std::cout << n2.name << std::endl;
+    std::cout << n2.outputs()["reader_out"] << std::endl;    
         
-    d2.inputs()["b"]->data(0,0,0) = 1;
-    d2.forward();
-    std::cout << d2.outputs()["d1_out"]->data(0,0,0) << std::endl;
+    n2.forward();
+    std::cout << n2.outputs()["reader_out"]->data(0,12,12) << std::endl;
 
-    d2.inputs()["b"]->data(0,0,0) = -1;
-    d2.forward();
-    std::cout << d2.outputs()["d1_out"]->data(0,0,0) << std::endl;
-        
+    n2.forward();
+    std::cout << n2.outputs()["reader_out"]->data(0,12,12) << std::endl;
+
+    n2.forward();
+    std::cout << n2.outputs()["reader_out"]->data(0,12,12) << std::endl;
+
     return 0;
 }
