@@ -139,6 +139,7 @@ namespace nl {
 
         // pass gradient through transfer function
         Eigen::Tensor<float,3> grad(to_d, to_w, to_h);
+        grad.setZero();
         for (uint16_t i = 0; i < to_d; ++i) {
             for (uint16_t j = 0; j < to_w; ++j) {
                 for (uint16_t k = 0; k < to_h; ++k) {

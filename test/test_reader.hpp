@@ -86,6 +86,20 @@ TEST(ImgReaderTest, DimMismatch) {
                  nl::DimensionException);
 }
 
-// TODO forward for ImgReader
+TEST(ImgReaderTest, Forward) {
+
+    nl::ImgReader r("reader", "test/img/valid.csv");
+    
+    r.forward();
+    EXPECT_FLOAT_EQ(r.outputs()["reader_out"]->data(0,12,12), 255);
+
+    r.forward();
+    EXPECT_FLOAT_EQ(r.outputs()["reader_out"]->data(0,12,12), 183);
+
+    r.forward();
+    EXPECT_FLOAT_EQ(r.outputs()["reader_out"]->data(0,12,12), 255);
+
+}
+
 
 #endif // NEURAL_LIB_READER_TEST_H

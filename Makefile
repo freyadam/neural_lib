@@ -17,9 +17,9 @@ CC=g++
 CFLAGS=--std=c++14 -Wall -O2 -fPIC -I$(EIGEN_PATH)
 LDFLAGS=
 
-.PHONY: all run clean doc test
+.PHONY: all run clean doc test run_ex1
 
-all: $(LIB) $(MAIN)
+all: $(LIB) $(MAIN) $(BIN)/example1 $(BIN)/example2
 
 $(LIB): $(LIB_OBJECTS)
 	@mkdir -p $(BIN)
@@ -49,3 +49,15 @@ doc:
 test:	$(LIB)
 	make --directory=test all
 	LD_LIBRARY_PATH=bin ./test/test_binary
+
+$(BIN)/example1: $(OBJ)/example1.o
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@  -Lbin -lneural -lboost_serialization
+
+run_ex1: all
+	LD_LIBRARY_PATH=bin ./$(BIN)/example1
+
+$(BIN)/example2: $(OBJ)/example2.o
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@  -Lbin -lneural -lboost_serialization
+
+run_ex2: all
+	LD_LIBRARY_PATH=bin ./$(BIN)/example2

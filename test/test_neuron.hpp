@@ -70,9 +70,9 @@ TEST(NeuronTest, Forward) {
     b2.data(0,0,0) = -1.2;
     n.forward();
 
-    // TODO lower precision
-    EXPECT_FLOAT_EQ(n.outputs()["n_out"]->data(0,0,0), 
-                    0.3 * w1 + -1.2 * w2 + threshold);
+    EXPECT_NEAR(n.outputs()["n_out"]->data(0,0,0), 
+                0.3 * w1 + -1.2 * w2 + threshold,
+                1e-3);
 }
 
 // correct backward gradient outputs

@@ -18,35 +18,10 @@ int main(int argc, char *argv[])
 {
 
     nl::ImgReader r("reader", "test/img/valid.csv");
+    nl::Dense d("d", "relu", &r, 3, 5, 7);
     nl::Net n("net");
     n.add(&r);
-    
-    // save net
-    std::string filename = "imgreader_serialization_test.txt";
-    {
-        std::ofstream ofs(filename);
-        boost::archive::text_oarchive oa(ofs);
-        oa << n;
-    }
-    // load net
-    nl::Net n2("net2");
-    {
-        std::ifstream ifs(filename);
-        boost::archive::text_iarchive ia(ifs);
-        ia >> n2;               
-    }
-    
-    std::cout << n2.name << std::endl;
-    std::cout << n2.outputs()["reader_out"] << std::endl;    
-        
-    n2.forward();
-    std::cout << n2.outputs()["reader_out"]->data(0,12,12) << std::endl;
-
-    n2.forward();
-    std::cout << n2.outputs()["reader_out"]->data(0,12,12) << std::endl;
-
-    n2.forward();
-    std::cout << n2.outputs()["reader_out"]->data(0,12,12) << std::endl;
+    n.add(&d);
 
     return 0;
 }

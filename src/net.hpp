@@ -47,12 +47,10 @@ namespace nl {
             return ordering;
         }
 
+    private:
         /// Make sure that ordering vector corresponds to current state
         /// of graph.
         void ordering_is_current();
-
-    private:
-
         /// Insert op and its corresponding input and output blocks 
         /// into maps 'ops' and 'blocks'
         void insert_into_maps(Op* op);

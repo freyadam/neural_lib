@@ -28,7 +28,7 @@ namespace nl {
         /// Constructor 
         /// @param name name of the Op
         /// @param file_addr address of the csv file
-        CsvReader(std::string name, std::string file_addr); //TODO all values into a single 1x1xK vector?
+        CsvReader(std::string name, std::string file_addr); 
 
         /// Read a single line and save individual records in output blocks.
         void forward();

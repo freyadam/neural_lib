@@ -137,7 +137,11 @@ TEST(SerializationTest, Conv) {
     // outputs
     EXPECT_EQ(c2.outputs().size(), 1);
     EXPECT_NE(c2.outputs()["c1_out"], nullptr);
-        
+
+    // defined weights
+    EXPECT_EQ(c2.inputs()["c1_w1"]->data(0,1,1), 3);
+    EXPECT_EQ(c2.inputs()["c1_thr1"]->data(0,0,0), 2);
+
     c2.inputs()["b"]->data(0,0,0) = 1;
     c2.forward();
     EXPECT_FLOAT_EQ(c2.outputs()["c1_out"]->data(1,0,0), 5);

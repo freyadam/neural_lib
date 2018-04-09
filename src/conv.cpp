@@ -175,8 +175,11 @@ namespace nl {
             for (uint16_t y = 0; y < window_size; ++y) {
                 for (uint16_t z = 0; z < window_size; ++z) {    
 
+                    // skip if position is outside of input tensor
                     if (i_y + y - padding_size < 0 ||
-                        i_z + z - padding_size < 0)
+                        i_z + z - padding_size < 0 ||
+                        i_y + y - padding_size >= input->dimensions()[1] ||
+                        i_y + y - padding_size >= input->dimensions()[2])
                         continue;
 
                     sum +=
@@ -204,8 +207,11 @@ namespace nl {
             for (uint16_t y = 0; y < window_size; ++y) {
                 for (uint16_t z = 0; z < window_size; ++z) {    
 
+                    // skip if position is outside of input tensor
                     if (i_y + y - padding_size < 0 ||
-                        i_z + z - padding_size < 0)
+                        i_z + z - padding_size < 0 ||
+                        i_y + y - padding_size >= input->dimensions()[1] ||
+                        i_y + y - padding_size >= input->dimensions()[2])
                         continue;
 
                     float weight = kernel->data(x,y,z);

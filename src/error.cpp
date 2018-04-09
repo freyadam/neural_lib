@@ -74,7 +74,7 @@ namespace nl {
 
         if (net_outputs.size() != correct_outputs.size())
             throw InputException();
-
+        
         // compute error for each pair
         for (uint16_t i = 0; i < net_outputs.size(); i++) {
             // subtract one tensor from the other and 
