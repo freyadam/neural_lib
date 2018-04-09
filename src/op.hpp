@@ -65,6 +65,13 @@ namespace nl {
         ///
 		std::string name;        
 
+    protected:
+        /// Blocks that were created during construction of this op. 
+        std::vector<Block *> owned;
+        /// Decides if owned block will deleted in destructor.
+        bool delete_owned;
+
+    private:
         template<class Archive>
         void serialize(Archive & ar, const unsigned int version)
         {
@@ -72,12 +79,6 @@ namespace nl {
             ar & owned;
             ar & delete_owned;;
         }
-
-    protected:
-        /// Blocks that were created during construction of this op. 
-        std::vector<Block *> owned;
-        /// Decides if owned block will deleted in destructor.
-        bool delete_owned;
 
         friend class boost::serialization::access;
 	};

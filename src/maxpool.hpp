@@ -33,7 +33,7 @@ namespace nl {
         
         /// Constructor
         /// @param name name of the operation
-        /// @param input operation
+        /// @param op output of this operation is used as input
         /// @param window_size length of the perception rectangle
         /// @param padding_size number of min. values added to input block
         /// 

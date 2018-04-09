@@ -18,11 +18,29 @@ namespace nl {
     ///
     class Conv : public Op {
     public:
-    
+
+        /// Constructor
+        /// @param name name of the operation
+        /// @param fn_name transfer function name
+        /// @param input input block
+        /// @param output_depth of output block
+        /// @param window_size height and width of kernel
+        /// @param padding_size how many layers of zeros should 
+        /// be appended to input block
+        /// @param stride by how much does kernel move
         Conv(std::string name, std::string fn_name, Block* input, 
              uint16_t output_depth,
              uint16_t window_size, uint16_t padding_size=0, uint16_t stride=1);
 
+        /// Constructor
+        /// @param name name of the operation
+        /// @param fn_name transfer function name
+        /// @param op output of this operation is used as input
+        /// @param output_depth of output block
+        /// @param window_size height and width of kernel
+        /// @param padding_size how many layers of zeros should 
+        /// be appended to input block
+        /// @param stride by how much does kernel move
         Conv(std::string name, std::string fn_name, Op* op, 
              uint16_t output_depth,
              uint16_t window_size, uint16_t padding_size=0, uint16_t stride=1);
@@ -110,6 +128,7 @@ namespace nl {
         // default constructor, for serialization
         Conv(): Op("default_name") {}
 
+        
         template<class Archive>
         void serialize(Archive & ar, const unsigned int version)
         {

@@ -17,6 +17,7 @@ namespace nl {
         virtual float forward(float x) = 0;
         /// Computes derivative in given value.
         virtual float backward(float x) = 0;
+    private:
         // vestigial serialization 
         friend class boost::serialization::access;
         template<class Archive>
@@ -34,6 +35,7 @@ namespace nl {
             float sigm = forward(x);
             return sigm * (1 - sigm);
         }
+    private:
         // vestigial serialization
         friend class boost::serialization::access;
         template<class Archive>
@@ -54,6 +56,7 @@ namespace nl {
         virtual float backward(float x) {
             return std::pow(2.0 / (std::exp(x) + std::exp(-x)), 2);
         }
+    private:
         // vestigial serialization
         friend class boost::serialization::access;
         template<class Archive>
@@ -72,6 +75,7 @@ namespace nl {
         virtual float backward(float x) {
             return (x > 0) ? 1 : 0;
         }
+    private:
         // vestigial serialization
         friend class boost::serialization::access;
         template<class Archive>
@@ -89,6 +93,7 @@ namespace nl {
         virtual float backward(float x) {
             return 1.0 / (1.0 + std::exp(-x));
         }
+    private:
         // vestigial serialization
         friend class boost::serialization::access;
         template<class Archive>
@@ -106,6 +111,7 @@ namespace nl {
         virtual float backward(float) {
             return 1.0;
         }
+    private:
         // vestigial serialization
         friend class boost::serialization::access;
         template<class Archive>
