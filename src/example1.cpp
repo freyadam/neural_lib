@@ -11,10 +11,10 @@ using namespace std;
 Example: Perceptron (linear separability) learning
 
 Single neuron with tanh transfer function is here used to approximate
-a hyperplane. Also this example is designed to show certain basic 
+a hyperplane. This example is designed to show certain basic 
 features of the library. In the beginning, input blocks and used 
 neuron is created. That neuron is then inserted into a network.
-This network is then trained using an instane of a Solver class.
+This network is then trained using an instance of a Solver class.
 
 This example is quite basic so no file or image I/O is performed
 and input is generated and inserted from outside of the library.
@@ -27,7 +27,8 @@ int main(int argc, char *argv[])
 {
 
     
-    // create blocks in which input is stored
+    // create blocks of dimensions [1,1,1]
+    // in which input is stored
     nl::Block b1("x", 1,1,1); 
     nl::Block b2("y", 1,1,1);
     // create block with desired value
