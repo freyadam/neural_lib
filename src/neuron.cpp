@@ -52,10 +52,10 @@ namespace nl {
 
     }
 
-    Neuron::Neuron(std::string name, std::string fn_name, std::vector<Block *> inputs):
+    Neuron::Neuron(std::string name, std::string fn_name, const std::vector<Block *> & inputs):
         Op(name), transfer_fn(TransferFns::get(fn_name)) {                        
             
-        for (auto input : inputs) {
+        for (auto & input : inputs) {
             if (input == nullptr)
                 throw nl::InputException();
         }

@@ -112,8 +112,6 @@ namespace nl {
             return m;
         }
 
-
-
     private:
         ///
         /// return next image address in list, 

@@ -25,7 +25,6 @@ solver.train(5) on the other hand would run 5 cycles.
 
 int main(int argc, char *argv[])
 {
-
     
     // create blocks of dimensions [1,1,1]
     // in which input is stored

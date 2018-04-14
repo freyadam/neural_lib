@@ -9,17 +9,6 @@
 #include "block.hpp"
 #include "neuron.hpp"
 
-/* Note: currently majority of serializing code is in 
-   
-
-*/
-
-namespace boost {
-    namespace serialization {
-
-    } // namespace serialization
-} // namespace boost
-
 BOOST_CLASS_EXPORT_GUID(nl::Op, "Op") 
 BOOST_CLASS_EXPORT_GUID(nl::Neuron, "Neuron") 
 BOOST_CLASS_EXPORT_GUID(nl::Dense, "Dense")

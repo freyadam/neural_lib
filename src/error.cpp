@@ -5,8 +5,8 @@
 
 namespace nl {
 
-    float Error::L1(std::vector<Block*> net_outputs, 
-                    std::vector<Block*> correct_outputs) {
+    float Error::L1(const std::vector<Block*> & net_outputs, 
+                    const std::vector<Block*> & correct_outputs) {
         float sum = 0.0;
 
         if (net_outputs.size() != correct_outputs.size())
@@ -25,7 +25,8 @@ namespace nl {
         return 0.5 * sum;
     }
 
-    float Error::L1(Block* net_output, Block* correct_output) {
+    float Error::L1(Block* net_output,
+                    Block* correct_output) {
 
         std::vector<Block*> net_vect;
         net_vect.push_back(net_output);
@@ -37,8 +38,8 @@ namespace nl {
     }
 
     std::vector<Eigen::Tensor<float,3>>
-        Error::L1_grad(std::vector<Block*> net_outputs, 
-                       std::vector<Block*> correct_outputs) {
+        Error::L1_grad(const std::vector<Block*> & net_outputs, 
+                       const std::vector<Block*> & correct_outputs) {
 
         if (net_outputs.size() != correct_outputs.size())
             throw InputException();
@@ -54,9 +55,9 @@ namespace nl {
         return ret;                
     }
 
-
     Eigen::Tensor<float, 3> 
-    Error::L1_grad(Block* net_output, Block* correct_output) {
+    Error::L1_grad(Block* net_output, 
+                   Block* correct_output) {
 
         std::vector<Block*> net_vect;
         net_vect.push_back(net_output);
@@ -68,8 +69,8 @@ namespace nl {
     }
 
 
-    float Error::L2(std::vector<Block*> net_outputs, 
-                    std::vector<Block*> correct_outputs) {
+    float Error::L2(const std::vector<Block*> & net_outputs, 
+                    const std::vector<Block*> & correct_outputs) {
         float sum = 0.0;
 
         if (net_outputs.size() != correct_outputs.size())
@@ -102,8 +103,8 @@ namespace nl {
     }
 
     std::vector<Eigen::Tensor<float, 3>>
-        Error::L2_grad(std::vector<Block*> net_outputs, 
-                       std::vector<Block*> correct_outputs) {
+        Error::L2_grad(const std::vector<Block*> & net_outputs, 
+                       const std::vector<Block*> & correct_outputs) {
 
         if (net_outputs.size() != correct_outputs.size())
             throw InputException();

@@ -28,7 +28,8 @@ namespace nl {
         /// @param name name of the resulting neuron
         /// @param fn_name name of used transfer function as defined in TransferFns
         /// @param inputs vector of input blocks
-        Neuron(std::string name, std::string fn_name, std::vector<Block *> inputs);
+        Neuron(std::string name, std::string fn_name, 
+               const std::vector<Block *> & inputs);
 
         /// Constructor.
         /// @param name name of the resulting neuron

@@ -127,7 +127,6 @@ namespace nl {
 
         // default constructor, for serialization
         Conv(): Op("default_name") {}
-
         
         template<class Archive>
         void serialize(Archive & ar, const unsigned int version)
