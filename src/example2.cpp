@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
     net.add(&l2);    
 
     // ----- create solver that is supposed to train the network -----
-    nl::Solver solver(&net, net.outputs()["l2_out"], net.outputs()["correct_out"]);
+    nl::Solver solver(net, net.outputs()["l2_out"], net.outputs()["correct_out"]);
     // solver.setLRDecay(0.3, 1000); // set learning rate decay
     // solver.setMethod("nesterov"); // use training with momentum
    

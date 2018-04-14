@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
     // create solver that is supposed to train the network
     // 'o' specifies the net result
     // 'd' specified the desired output
-    nl::Solver solver(&net, o, d);
+    nl::Solver solver(net, o, d);
     // solver.setMethod("nesterov"); // use training with momentum
 
     // define hyperplane parameters that should be learned

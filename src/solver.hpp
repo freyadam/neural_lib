@@ -21,13 +21,13 @@ namespace nl {
         /// @param output_block block in which computation result will
         /// be stored
         /// @param desired_block block with correct result data
-        Solver(Net* net, block_ptr output_block, block_ptr desired_block);
+        Solver(Net & net, block_ptr output_block, block_ptr desired_block);
         /// Constructor.
         /// @param net neural network that is being trained
         /// @param output vector of blocks in which computation result will
         /// be storedx
         /// @param desired vector of blocks with correct result data.
-        Solver(Net* net, 
+        Solver(Net & net, 
                std::vector<block_ptr> output, 
                std::vector<block_ptr> desired):
             net(net), output(output), desired(desired), lr(0.1) {}        
@@ -68,7 +68,7 @@ namespace nl {
         /// Network that is being 
         /// trained by the solver.
         ///
-        Net* net;    
+        Net & net;    
         /// op outputs
         std::vector<block_ptr> output;
         /// desired outputs
