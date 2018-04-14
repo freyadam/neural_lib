@@ -19,7 +19,7 @@ namespace nl {
         /// Fill data tensor of block with random float from uniform
         /// distribution [-1,1]
         /// @param block block which data tensor needs to be generated  
-        static void init_random(Block* block);
+        static void init_random(block_ptr block);
         /// random number generator 
         static std::random_device gen;
         /// Uniform distribution float number generator

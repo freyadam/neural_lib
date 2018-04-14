@@ -6,7 +6,7 @@ namespace nl {
     std::random_device Generator::gen;
     std::uniform_real_distribution<float> Generator::uniform(-1.0, 1.0);
 
-    void Generator::init_random(Block* block) {
+    void Generator::init_random(block_ptr block) {
 
         auto dims = block->dimensions();
         

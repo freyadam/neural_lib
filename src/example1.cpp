@@ -28,21 +28,22 @@ int main(int argc, char *argv[])
     
     // create blocks of dimensions [1,1,1]
     // in which input is stored
-    nl::Block b1("x", 1,1,1); 
-    nl::Block b2("y", 1,1,1);
+    nl::block_ptr b1 = std::make_shared<nl::Block>("x", 1,1,1); 
+    nl::block_ptr b2 = std::make_shared<nl::Block>("y", 1,1,1); 
+
     // create block with desired value
-    nl::Block d("z", 1,1,1);
+    nl::block_ptr d = std::make_shared<nl::Block>("z", 1,1,1); 
 
     // create perceptron with tanh transfer function 
-    nl::Neuron n("n", "tanh", &b1, &b2);
+    nl::Neuron n("n", "tanh", b1, b2);
 
     // block with output of neuron
-    nl::Block &o = *n.outputs()["n_out"];
+    nl::block_ptr o = n.outputs()["n_out"];
 
     // neuron weights
-    // nl::Block &w1 = *n.inputs()["n_b1_w"];
-    // nl::Block &w2 = *n.inputs()["n_b2_w"];
-    // nl::Block &thr = *n.inputs()["n_thr"];
+    // nl::block_ptr &w1 = n.inputs()["n_b1_w"];
+    // nl::block_ptr &w2 = n.inputs()["n_b2_w"];
+    // nl::block_ptr &thr = n.inputs()["n_thr"];
 
     // create network and put perceptron inside
     nl::Net net("net");
@@ -51,7 +52,7 @@ int main(int argc, char *argv[])
     // create solver that is supposed to train the network
     // 'o' specifies the net result
     // 'd' specified the desired output
-    nl::Solver solver(&net, &o, &d);
+    nl::Solver solver(&net, o, d);
     // solver.setMethod("nesterov"); // use training with momentum
 
     // define hyperplane parameters that should be learned
@@ -63,9 +64,9 @@ int main(int argc, char *argv[])
     for (uint16_t i = 0; i < iterations; ++i) {
 
         // generate and 'manually' load input into blocks
-        b1.data(0,0,0) = x = 10 * nl::Generator::get();
-        b2.data(0,0,0) = y = 10 * nl::Generator::get();
-        d.data(0,0,0) = z = (a*x + b*y - c > 0 ? 1 : -1);
+        b1->data(0,0,0) = x = 10 * nl::Generator::get();
+        b2->data(0,0,0) = y = 10 * nl::Generator::get();
+        d->data(0,0,0) = z = (a*x + b*y - c > 0 ? 1 : -1);
 
         // run single train cycle that runs forward, backward on net
         // and then updates the weights

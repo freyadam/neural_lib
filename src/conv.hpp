@@ -4,6 +4,10 @@
 
 #include <vector>
 
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/vector.hpp>
+
 #include "block.hpp"
 #include "op.hpp"
 #include "random.hpp"
@@ -28,7 +32,7 @@ namespace nl {
         /// @param padding_size how many layers of zeros should 
         /// be appended to input block
         /// @param stride by how much does kernel move
-        Conv(std::string name, std::string fn_name, Block* input, 
+        Conv(std::string name, std::string fn_name, block_ptr input, 
              uint16_t output_depth,
              uint16_t window_size, uint16_t padding_size=0, uint16_t stride=1);
 
@@ -72,9 +76,9 @@ namespace nl {
         /// 
         void grad_window_update(float grad, uint16_t x, uint16_t y, uint16_t z);
         /// Input block
-        Block* input;
+        block_ptr input;
         /// Output block
-        Block* output;
+        block_ptr output;
         ///
         /// All weights for a single depth slice, that is cells with 
         /// the same depth.
@@ -82,10 +86,10 @@ namespace nl {
         struct WeightPair {
             /// Block of weights identical for all cells in single 
             /// output depth slice, 
-            Block* kernel;
+            block_ptr kernel;
             /// Blocks of dimension (1,1,1) representing thresholds for indivudual 
-            /// depth slice.
-            Block* threshold;                
+            /// depth slices.
+            block_ptr threshold;                
 
             template<class Archive>
             void serialize(Archive & ar, const unsigned int version)
@@ -126,20 +130,39 @@ namespace nl {
         TransferFn* transfer_fn;
 
         // default constructor, for serialization
-        Conv(): Op("default_name") {}
-        
+        Conv(): Op("default_name") {}        
+
         template<class Archive>
-        void serialize(Archive & ar, const unsigned int version)
+        void save(Archive & ar, const unsigned int) const
         {
-            ar & boost::serialization::base_object<nl::Op>(*this);
-            ar & input;
-            ar & output;
-            ar & weights;
-            ar & window_size;
-            ar & padding_size;
-            ar & stride;
-            ar & transfer_fn;
+            ar << boost::serialization::base_object<nl::Op>(*this);
+            ar << input;
+            ar << output;
+            ar << weights;
+            ar << window_size;
+            ar << padding_size;
+            ar << stride;
+            ar << transfer_fn;
         }
+
+        template<class Archive>
+        void load(Archive & ar, const unsigned int)
+        {
+            ar >> boost::serialization::base_object<nl::Op>(*this);
+
+            // delete previous content
+            weights.clear();
+
+            ar >> input;
+            ar >> output;
+            ar >> weights;
+            ar >> window_size;
+            ar >> padding_size;
+            ar >> stride;
+            ar >> transfer_fn;
+        }
+        BOOST_SERIALIZATION_SPLIT_MEMBER()
+
         friend class boost::serialization::access;
     };
 

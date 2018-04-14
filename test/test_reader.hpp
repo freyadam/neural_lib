@@ -29,7 +29,7 @@ TEST(CsvReaderTest, NoRecords) {
 TEST(CsvReaderTest, Valid) {
 
     nl::CsvReader r("reader", "test/csv/valid.csv");
-    nl::Block* o1 = r.outputs()["reader_out"];
+    nl::block_ptr o1 = r.outputs()["reader_out"];
 
     // second pass 
     r.forward();

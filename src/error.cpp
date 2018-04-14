@@ -5,8 +5,8 @@
 
 namespace nl {
 
-    float Error::L1(const std::vector<Block*> & net_outputs, 
-                    const std::vector<Block*> & correct_outputs) {
+    float Error::L1(const std::vector<block_ptr> & net_outputs, 
+                    const std::vector<block_ptr> & correct_outputs) {
         float sum = 0.0;
 
         if (net_outputs.size() != correct_outputs.size())
@@ -25,21 +25,21 @@ namespace nl {
         return 0.5 * sum;
     }
 
-    float Error::L1(Block* net_output,
-                    Block* correct_output) {
+    float Error::L1(block_ptr net_output,
+                    block_ptr correct_output) {
 
-        std::vector<Block*> net_vect;
+        std::vector<block_ptr> net_vect;
         net_vect.push_back(net_output);
 
-        std::vector<Block*> correct_vect;
+        std::vector<block_ptr> correct_vect;
         net_vect.push_back(correct_output);
 
         return Error::L1(net_vect, correct_vect);                
     }
 
     std::vector<Eigen::Tensor<float,3>>
-        Error::L1_grad(const std::vector<Block*> & net_outputs, 
-                       const std::vector<Block*> & correct_outputs) {
+        Error::L1_grad(const std::vector<block_ptr> & net_outputs, 
+                       const std::vector<block_ptr> & correct_outputs) {
 
         if (net_outputs.size() != correct_outputs.size())
             throw InputException();
@@ -56,21 +56,21 @@ namespace nl {
     }
 
     Eigen::Tensor<float, 3> 
-    Error::L1_grad(Block* net_output, 
-                   Block* correct_output) {
+    Error::L1_grad(block_ptr net_output, 
+                   block_ptr correct_output) {
 
-        std::vector<Block*> net_vect;
+        std::vector<block_ptr> net_vect;
         net_vect.push_back(net_output);
 
-        std::vector<Block*> correct_vect;
+        std::vector<block_ptr> correct_vect;
         net_vect.push_back(correct_output);
 
         return Error::L1_grad(net_vect, correct_vect)[0];                
     }
 
 
-    float Error::L2(const std::vector<Block*> & net_outputs, 
-                    const std::vector<Block*> & correct_outputs) {
+    float Error::L2(const std::vector<block_ptr> & net_outputs, 
+                    const std::vector<block_ptr> & correct_outputs) {
         float sum = 0.0;
 
         if (net_outputs.size() != correct_outputs.size())
@@ -90,21 +90,21 @@ namespace nl {
         return 0.5 * sqrt(sum);
     }    
 
-    float Error::L2(Block* net_output,                     
-                    Block* correct_output) {
+    float Error::L2(block_ptr net_output,                     
+                    block_ptr correct_output) {
 
-        std::vector<Block*> net_vect;
+        std::vector<block_ptr> net_vect;
         net_vect.push_back(net_output);
 
-        std::vector<Block*> correct_vect;
+        std::vector<block_ptr> correct_vect;
         net_vect.push_back(correct_output);
 
         return Error::L2(net_vect, correct_vect);
     }
 
     std::vector<Eigen::Tensor<float, 3>>
-        Error::L2_grad(const std::vector<Block*> & net_outputs, 
-                       const std::vector<Block*> & correct_outputs) {
+        Error::L2_grad(const std::vector<block_ptr> & net_outputs, 
+                       const std::vector<block_ptr> & correct_outputs) {
 
         if (net_outputs.size() != correct_outputs.size())
             throw InputException();
@@ -120,13 +120,13 @@ namespace nl {
         return ret;
     }
 
-    Eigen::Tensor<float, 3> Error::L2_grad(Block* net_output,                     
-                                           Block* correct_output) {
+    Eigen::Tensor<float, 3> Error::L2_grad(block_ptr net_output,                     
+                                           block_ptr correct_output) {
 
-        std::vector<Block*> net_vect;
+        std::vector<block_ptr> net_vect;
         net_vect.push_back(net_output);
 
-        std::vector<Block*> correct_vect;
+        std::vector<block_ptr> correct_vect;
         net_vect.push_back(correct_output);
 
         return Error::L2_grad(net_vect, correct_vect)[0];

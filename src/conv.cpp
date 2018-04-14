@@ -3,7 +3,7 @@
 
 namespace nl {
 
-    Conv::Conv(std::string name, std::string fn_name, Block* input, 
+    Conv::Conv(std::string name, std::string fn_name, block_ptr input, 
                uint16_t output_depth,
                uint16_t window_size, uint16_t padding_size, uint16_t stride):
         Op(name), input(input),
@@ -64,27 +64,27 @@ namespace nl {
         uint16_t output_height = ((padded_height - window_size) / stride) + 1;
 
         // create output block
-        output = new Block(name + "_out", 
-                           output_depth,
-                           output_width,
-                           output_height);
+        output = std::make_shared<Block>(name + "_out", 
+                                         output_depth,
+                                         output_width,
+                                         output_height);
 
         // create weights 
         for (uint16_t d = 0; d < output_depth; d++) {
             WeightPair p;
-            p.kernel = new Block(name + "_w" + std::to_string(d),
-                                      input_dims[0],
-                                      window_size,
-                                      window_size);
+            p.kernel = std::make_shared<Block>(name + "_w" 
+                                               + std::to_string(d),
+                                               input_dims[0],
+                                               window_size,
+                                               window_size);
             Generator::init_random(p.kernel);
             p.kernel->trainable = true;
-            owned.push_back(p.kernel);
 
-            p.threshold = new Block(name + "_thr" + std::to_string(d),
-                                      1,1,1);
+            p.threshold = std::make_shared<Block>(name + "_thr" 
+                                                  + std::to_string(d),
+                                                  1,1,1);
             Generator::init_random(p.threshold);
             p.threshold->trainable = true;
-            owned.push_back(p.threshold);            
 
             // push new weight pair to vector
             weights.push_back(p);
@@ -140,21 +140,21 @@ namespace nl {
 
     block_map Conv::outputs() {
         block_map map;
-        map.insert(std::pair<std::string, Block*>(output->name,
+        map.insert(std::pair<std::string, block_ptr>(output->name,
                                                   output));
         return map;   
     }
 
     block_map Conv::inputs() {
         block_map map;
-        map.insert(std::pair<std::string, Block*>(input->name,
+        map.insert(std::pair<std::string, block_ptr>(input->name,
                                                   input));
         for (auto & p : weights) {
             auto & kernel = p.kernel;
             auto & threshold = p.threshold;
-            map.insert(std::pair<std::string, Block*>(kernel->name,
+            map.insert(std::pair<std::string, block_ptr>(kernel->name,
                                                       kernel));
-            map.insert(std::pair<std::string, Block*>(threshold->name,
+            map.insert(std::pair<std::string, block_ptr>(threshold->name,
                                                       threshold));
         }
 
@@ -163,7 +163,7 @@ namespace nl {
 
     float Conv::weighted_sum(uint16_t d, uint16_t w, uint16_t h) {
     
-        Block* kernel = weights[d].kernel;
+        block_ptr kernel = weights[d].kernel;
 
         // specify upper left corner of window in input block
         uint16_t i_y = stride * w;
@@ -197,7 +197,7 @@ namespace nl {
 
     void Conv::grad_window_update(float grad, uint16_t d, uint16_t w, uint16_t h) {
 
-        Block* kernel = weights[d].kernel;
+        block_ptr kernel = weights[d].kernel;
 
         // specify upper left corner of window in input block
         uint16_t i_y = stride * w;

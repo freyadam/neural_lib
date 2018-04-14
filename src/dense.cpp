@@ -23,7 +23,7 @@ namespace nl {
                       depth, width, height);
     }
 
-    Dense::Dense(std::string name, std::string fn_name, Block* input, 
+    Dense::Dense(std::string name, std::string fn_name, block_ptr input, 
                  uint16_t depth, uint16_t width, uint16_t height):
         Op(name), input(input), transfer_fn(TransferFns::get(fn_name)) {
 
@@ -40,24 +40,21 @@ namespace nl {
                        uint16_t width, uint16_t height) {
 
         // create output block
-        output = new Block(name + "_out", depth, width, height);
-        owned.push_back(output);
+        output = std::make_shared<Block>(name + "_out", depth, width, height);
 
         // create weight block
         // individual weight between each cell in input and output blocks
         uint16_t weight_size = 
             input_size
             * depth * width * height;
-        weight = new Block(name + "_w", 1, 1, weight_size);
+        weight = std::make_shared<Block>(name + "_w", 1, 1, weight_size);
         weight->trainable = true;
         Generator::init_random(weight);
-        owned.push_back(weight);
 
         // create threshold block
-        threshold = new Block(name + "_thr", depth, width, height);
+        threshold = std::make_shared<Block>(name + "_thr", depth, width, height);
         threshold->trainable = true;
         Generator::init_random(threshold);
-        owned.push_back(threshold);
         
     }
 
@@ -217,7 +214,7 @@ namespace nl {
     block_map Dense::outputs() {
         block_map map;
 
-        map.insert(std::pair<std::string, Block*>(output->name,
+        map.insert(std::pair<std::string, block_ptr>(output->name,
                                                   output));
         return map;
     }
@@ -225,11 +222,11 @@ namespace nl {
     block_map Dense::inputs() {
         block_map map;
 
-        map.insert(std::pair<std::string, Block*>(input->name,
+        map.insert(std::pair<std::string, block_ptr>(input->name,
                                                   input));
-        map.insert(std::pair<std::string, Block*>(weight->name,
+        map.insert(std::pair<std::string, block_ptr>(weight->name,
                                                   weight));
-        map.insert(std::pair<std::string, Block*>(threshold->name,
+        map.insert(std::pair<std::string, block_ptr>(threshold->name,
                                                   threshold));
         return map;
     }

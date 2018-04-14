@@ -2,6 +2,8 @@
 #ifndef NEURAL_LIB_DENSE_H
 #define NEURAL_LIB_DENSE_H
 
+#include <boost/serialization/shared_ptr.hpp>
+
 #include "block.hpp"
 #include "op.hpp"
 #include "random.hpp"
@@ -34,7 +36,7 @@ namespace nl {
         /// @param depth depth of output block
         /// @param width width of output block
         /// @param height height of output block
-        Dense(std::string name, std::string fn_name, Block* input, 
+        Dense(std::string name, std::string fn_name, block_ptr input, 
               uint16_t depth, uint16_t width, uint16_t height);
 
         virtual void forward();
@@ -53,9 +55,9 @@ namespace nl {
         void create_blocks(uint16_t input_size, uint16_t depth, 
                            uint16_t width, uint16_t height);
         /// Input block
-        Block* input;
+        block_ptr input;
         /// Output block
-        Block* output;
+        block_ptr output;
         ///
         /// Weight block, 6-dimensional Tensor with first three dimensions 
         /// specifying the connection in an input block and the other three
@@ -64,9 +66,9 @@ namespace nl {
         /// 3-dimensional Tensor with first two dimensions set to 1, so
         /// it is actually stored as a vector.
         ///        
-        Block* weight;
+        block_ptr weight;
         /// Threshold block
-        Block* threshold;
+        block_ptr threshold;
         /// Transfer function reference
         TransferFn* transfer_fn;
 

@@ -10,6 +10,7 @@
 #include "cimg/CImg.h"
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/base_object.hpp>
+#include <boost/serialization/vector.hpp>
 
 #include "block.hpp"
 #include "op.hpp"
@@ -48,7 +49,7 @@ namespace nl {
         static const char delimiter = ',';
         
         /// Output block
-        Block* output;
+        block_ptr output;
 
         /// Stream for reading individual lines
         std::ifstream line_stream;
@@ -107,7 +108,7 @@ namespace nl {
         }
 
         virtual block_map outputs() {
-            block_map m = {std::pair<std::string, Block*>
+            block_map m = {std::pair<std::string, block_ptr>
                            (output_block->name, output_block)};            
             return m;
         }
@@ -120,7 +121,7 @@ namespace nl {
         std::string next_image_addr();
 
         /// block in which resulting image is saved
-        Block* output_block;
+        block_ptr output_block;
 
         /// ifstream corresponding to text file with image addresses
         std::ifstream line_stream;

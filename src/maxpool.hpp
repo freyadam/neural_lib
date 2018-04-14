@@ -6,6 +6,8 @@
 #include <limits>
 #include <tuple>
 
+#include <boost/serialization/shared_ptr.hpp>
+
 #include "block.hpp"
 #include "op.hpp"
 #include "exceptions.hpp"
@@ -28,7 +30,7 @@ namespace nl {
         /// @param window_size length of the perception rectangle
         /// @param padding_size number of min. values added to input block
         /// 
-        MaxPool(std::string name, Block* input,
+        MaxPool(std::string name, block_ptr input,
                 uint16_t window_size, uint16_t padding_size=0);        
         
         /// Constructor
@@ -50,9 +52,9 @@ namespace nl {
 
     private:
         /// Input block
-        Block* input;
+        block_ptr input;
         /// Output block
-        Block* output;
+        block_ptr output;
         ///
         /// Window size
         /// The window is rectangular and two-dimensional so 

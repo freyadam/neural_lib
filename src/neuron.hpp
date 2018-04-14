@@ -4,10 +4,13 @@
 #include <vector>
 #include <unordered_map>
 #include <iostream>
+#include <memory>
+
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/vector.hpp>
+#include <boost/serialization/shared_ptr.hpp>
 
 #include "random.hpp"
 #include "op.hpp"
@@ -29,7 +32,7 @@ namespace nl {
         /// @param fn_name name of used transfer function as defined in TransferFns
         /// @param inputs vector of input blocks
         Neuron(std::string name, std::string fn_name, 
-               const std::vector<Block *> & inputs);
+               const std::vector<block_ptr> & inputs);
 
         /// Constructor.
         /// @param name name of the resulting neuron
@@ -42,7 +45,7 @@ namespace nl {
         /// @param name name of the resulting neuron
         /// @param fn_name name of used transfer function as defined in TransferFns
         /// @param input input block
-        Neuron(std::string name, std::string fn_name, Block* input);
+        Neuron(std::string name, std::string fn_name, block_ptr input);
 
         /// Constructor.
         /// @param name name of the resulting neuron
@@ -50,7 +53,7 @@ namespace nl {
         /// @param input input block
         /// @param args rest of the blocks
         template<typename... Args>
-        Neuron(std::string name, std::string fn_name, Block* input, Args... args):
+        Neuron(std::string name, std::string fn_name, block_ptr input, Args... args):
             Neuron(name, fn_name, args...) {
 
             if (input == nullptr)
@@ -64,16 +67,14 @@ namespace nl {
 
             // insert block and appropriate weight to vector
             InputPair ip;                
-            Block* weight = new Block(name + "_" + input->name + "_w", 1, 1, 1);
+            block_ptr weight = std::make_shared<Block>(name + "_" + input->name + "_w", 1, 1, 1);
+
             weight->data(0,0,0) = Generator::get();
             weight->trainable = true; // weights should be trained
 
             ip.input = input;
             ip.weight = weight;
             input_vector.push_back(ip);
-
-            // created weights need to be deleted in the end
-            owned.push_back(weight);                        
         }
 
         virtual void forward();
@@ -104,8 +105,8 @@ namespace nl {
         struct InputPair {
             friend class boost::serialization::access;
 
-            Block* input; /// input from previous layer
-            Block* weight; /// corresponding weight
+            block_ptr input; /// input from previous layer
+            block_ptr weight; /// corresponding weight
 
             template<class Archive>
             void serialize(Archive & ar, const unsigned int version)
@@ -118,9 +119,9 @@ namespace nl {
         std::vector<InputPair> input_vector;        
 
         /// Block in which result of Neuron::forward() is stored.
-        Block* output;
+        block_ptr output;
         /// Threshold value.
-        Block* threshold;        
+        block_ptr threshold;        
         /// Transfer function
         TransferFn* transfer_fn;
     };

@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <iostream>
 
+#include <boost/serialization/shared_ptr.hpp>
+
 #include "random.hpp"
 #include "op.hpp"
 #include "transfer_fns.hpp"
@@ -29,7 +31,7 @@ namespace nl {
         /// Constructor.
         /// @param name name of the softmax op
         /// @param input input block
-        Softmax(std::string name, Block* input);
+        Softmax(std::string name, block_ptr input);
 
         virtual void forward();
 
@@ -44,11 +46,11 @@ namespace nl {
         /// Auxiliary method called by constructor,
         /// creates output block
         /// 
-        void create_output(Block* input);
+        void create_output(block_ptr input);
         /// Input block
-        Block* input;
+        block_ptr input;
         /// Output block
-        Block* output;
+        block_ptr output;
     };
 
 } // namespace nl

@@ -12,9 +12,9 @@ TEST(NetTest, AddOp) {
 
     EXPECT_THROW(net.add(&net), nl::InputException);
 
-    nl::Block b("b", 1, 1, 1);
-    nl::Neuron n1("n", "relu", &b);
-    nl::Neuron n2("n", "relu", &b);
+    nl::block_ptr b = std::make_shared<nl::Block>("b", 1, 1, 1);
+    nl::Neuron n1("n", "relu", b);
+    nl::Neuron n2("n", "relu", b);
 
     net.add(&n1);
     EXPECT_THROW(net.add(&n2), nl::DuplicityException);
@@ -28,8 +28,8 @@ TEST(NetTest, InputsOutputs) {
    EXPECT_EQ(net.inputs().size(), 0);
    EXPECT_EQ(net.outputs().size(), 0);
 
-    nl::Block b1("b1", 1, 1, 1);
-    nl::Neuron n1("n1", "relu", &b1);
+    nl::block_ptr b1 = std::make_shared<nl::Block>("b1", 1, 1, 1);
+    nl::Neuron n1("n1", "relu", b1);
     nl::Neuron n2("n2", "relu", &n1);
 
     net.add(&n1);
@@ -40,8 +40,8 @@ TEST(NetTest, InputsOutputs) {
     // output of n2, "n2_out"
     EXPECT_EQ(net.outputs().size(), 1);
 
-    nl::Block b2("b2", 1, 1, 1);
-    nl::Neuron n3("n3", "relu", &b2);
+    nl::block_ptr b2 = std::make_shared<nl::Block>("b2", 1, 1, 1);
+    nl::Neuron n3("n3", "relu", b2);
 
     net.add(&n3);
 
@@ -56,8 +56,8 @@ TEST(NetTest, Ordering) {
     // empty net has trivially no ordering
     EXPECT_EQ(net.get_ordering().size(), 0);
 
-    nl::Block b1("b1", 1, 1, 1);
-    nl::Neuron n1("n1", "relu", &b1);
+    nl::block_ptr b1 = std::make_shared<nl::Block>("b1", 1, 1, 1);
+    nl::Neuron n1("n1", "relu", b1);
     nl::Neuron n2("n2", "relu", &n1);
 
     net.add(&n1);
@@ -68,8 +68,8 @@ TEST(NetTest, Ordering) {
     EXPECT_STREQ(net.get_ordering()[0]->name.c_str(), "n1");
     EXPECT_STREQ(net.get_ordering()[1]->name.c_str(), "n2");
 
-    nl::Block b2("b2", 1, 1, 1);
-    nl::Neuron n3("n3", "relu", &b2);
+    nl::block_ptr b2 = std::make_shared<nl::Block>("b2", 1, 1, 1);
+    nl::Neuron n3("n3", "relu", b2);
 
     net.add(&n3);
     std::vector<nl::Op*> ord = net.get_ordering();

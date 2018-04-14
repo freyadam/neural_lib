@@ -5,7 +5,7 @@
 
 namespace nl {
 
-    Solver::Solver(Net* net, Block* output_block, Block* desired_block):
+    Solver::Solver(Net* net, block_ptr output_block, block_ptr desired_block):
         net(net), lr(0.1), 
         nesterov(false), 
         decay_factor(0.1), cycle_length(1000), steps_without_change(0) {
@@ -33,7 +33,7 @@ namespace nl {
 
             // zero out gradient from previous cycle
             for (auto & block_pair : net->blocks) {
-                Block* b = block_pair.second;
+                block_ptr b = block_pair.second;
                 b->zero_grad();
             }
 
@@ -53,7 +53,7 @@ namespace nl {
 
             // update weights using gradient
             for (auto & block_pair : net->blocks) {
-                Block* b = block_pair.second;
+                block_ptr b = block_pair.second;
                 if (b->trainable) 
                     b->data -= lr * b->grad;
             }
@@ -74,13 +74,13 @@ namespace nl {
 
             // zero out gradient from previous cycle
             for (auto & block_pair : net->blocks) {
-                Block* b = block_pair.second;
+                block_ptr b = block_pair.second;
                 b->zero_grad();
             }
 
             // update weights using momentum term
             for (auto & block_pair : net->blocks) {
-                Block* b = block_pair.second;
+                block_ptr b = block_pair.second;
                 if (b->trainable) 
                     b->data -= (lr/3) * momentum[b->name];
             }            
@@ -101,14 +101,14 @@ namespace nl {
 
             // update weights using gradient
             for (auto & block_pair : net->blocks) {
-                Block* b = block_pair.second;
+                block_ptr b = block_pair.second;
                 if (b->trainable) 
                     b->data -= lr * b->grad;
             }
 
             // update momentum
             for (auto & block_pair : net->blocks) {
-                Block* b = block_pair.second;
+                block_ptr b = block_pair.second;
                 if (b->trainable) 
                     momentum[b->name] =
                         inertia * momentum[b->name] +
@@ -143,7 +143,7 @@ namespace nl {
         // create a momentum tensor of correct dimension 
         // for each trainable block
         for (auto & block_pair : net->blocks) {
-            Block* block = block_pair.second;
+            block_ptr block = block_pair.second;
             if (block->trainable) {
 
                 // get dimensions

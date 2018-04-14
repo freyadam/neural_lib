@@ -3,9 +3,10 @@
 
 namespace nl {
 
-Sigmoid TransferFns::sigmoid;
-Tanh TransferFns::tanh;
-ReLU TransferFns::relu;
-Softplus TransferFns::softplus;
-Linear TransferFns::linear; 
+    Sigmoid TransferFns::sigmoid;
+    Tanh TransferFns::tanh;
+    ReLU TransferFns::relu;
+    Softplus TransferFns::softplus;
+    Linear TransferFns::linear; 
+
 }

@@ -7,6 +7,7 @@
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/unordered_map.hpp>
+#include <boost/serialization/shared_ptr.hpp>
 
 #include "op.hpp"
 #include "block.hpp"

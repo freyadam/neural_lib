@@ -48,8 +48,7 @@ namespace nl {
             throw InputException();
 
         // create output block of size 1x1xrecord_count
-        output = new Block(name + "_out", 1, 1, record_count);
-        owned.push_back(output); 
+        output = std::make_shared<Block>(name + "_out", 1, 1, record_count);
 
         // initialize stream to the beginning of the file
         line_stream = std::ifstream(file_addr, std::ifstream::in);
@@ -126,8 +125,7 @@ namespace nl {
             throw InputException();
 
         // create output block            
-        output_block = new Block(name + "_out", channel_no, width, height);
-        owned.push_back(output_block);
+        output_block = std::make_shared<Block>(name + "_out", channel_no, width, height);
 
         // piece of code fixing boost::serialization bug/strange_edge_case
         forward();

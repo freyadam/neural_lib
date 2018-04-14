@@ -72,7 +72,7 @@ namespace nl {
         /// set to false for blocks holding data passed through net.
         /// 
         bool trainable = false;
-private:
+    private:
 
         /// Default constructor. Provided primarily for serialization purposes.
         Block(): Block("default_name", 1, 1, 1) {};
@@ -140,8 +140,9 @@ private:
         }
         BOOST_SERIALIZATION_SPLIT_MEMBER()
 	};
-   
-    typedef std::unordered_map<std::string, Block*> block_map;    
+
+    typedef std::shared_ptr<Block> block_ptr;
+    typedef std::unordered_map<std::string, block_ptr> block_map;    
 
 } // namespace nl
 

@@ -21,15 +21,15 @@ namespace nl {
         /// @param output_block block in which computation result will
         /// be stored
         /// @param desired_block block with correct result data
-        Solver(Net* net, Block* output_block, Block* desired_block);
+        Solver(Net* net, block_ptr output_block, block_ptr desired_block);
         /// Constructor.
         /// @param net neural network that is being trained
         /// @param output vector of blocks in which computation result will
         /// be storedx
         /// @param desired vector of blocks with correct result data.
         Solver(Net* net, 
-               std::vector<Block*> output, 
-               std::vector<Block*> desired):
+               std::vector<block_ptr> output, 
+               std::vector<block_ptr> desired):
             net(net), output(output), desired(desired), lr(0.1) {}        
         /// Forward pass, backward pass and subsequent weight update
         /// constitutes a single cycle. 
@@ -70,9 +70,9 @@ namespace nl {
         ///
         Net* net;    
         /// op outputs
-        std::vector<Block*> output;
+        std::vector<block_ptr> output;
         /// desired outputs
-        std::vector<Block*> desired;
+        std::vector<block_ptr> desired;
         /// learning rate
         float lr;
         /// momentum learning rate

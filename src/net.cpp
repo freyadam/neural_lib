@@ -105,7 +105,7 @@ namespace nl {
                         
         // insert input blocks into map of blocks
         for (auto & pair : op->inputs()) {
-            Block* b = pair.second;
+            block_ptr b = pair.second;
             if (blocks[b->name] != nullptr && // value for given key is in map
                 blocks[b->name] != b)         // but it is not the given block
                 throw DuplicityException();
@@ -115,7 +115,7 @@ namespace nl {
 
         // insert output blocks into map of blocks
         for (auto & pair : op->outputs()) {
-            Block* b = pair.second;
+            block_ptr b = pair.second;
             if (blocks[b->name] != nullptr && // value for given key is in map
                 blocks[b->name] != b)         // but it is not the given block
                 throw DuplicityException();

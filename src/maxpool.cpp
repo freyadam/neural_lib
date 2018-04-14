@@ -3,7 +3,7 @@
 
 namespace nl {    
 
-    MaxPool::MaxPool(std::string name, Block* input,
+    MaxPool::MaxPool(std::string name, block_ptr input,
                      uint16_t window_size, uint16_t padding_size):
         Op(name), input(input), 
         window_size(window_size), padding_size(padding_size){
@@ -25,11 +25,10 @@ namespace nl {
             throw nl::InputException();            
 
         // create output
-        output = new Block(name + "_out",
+        output = std::make_shared<Block>(name + "_out",
                            input_dims[0], // same depth as input block
                            input_dims[1] + 2 * padding_size - (window_size - 1),
                            input_dims[2] + 2 * padding_size - (window_size - 1));
-        owned.push_back(output);
 
     }
 
@@ -63,11 +62,10 @@ namespace nl {
             throw nl::InputException();            
 
         // create output
-        output = new Block(name + "_out",
+        output = std::make_shared<Block>(name + "_out",
                            input_dims[0],
                            input_dims[1] + 2 * padding_size - (window_size - 1),
                            input_dims[2] + 2 * padding_size - (window_size - 1));
-        owned.push_back(output);
 
     }
 
@@ -114,14 +112,14 @@ namespace nl {
 
     block_map MaxPool::outputs() {
         block_map map;
-        map.insert(std::pair<std::string, Block*>(output->name,
+        map.insert(std::pair<std::string, block_ptr>(output->name,
                                                   output));
         return map;   
     }
 
     block_map MaxPool::inputs() {
         block_map map;
-        map.insert(std::pair<std::string, Block*>(input->name,
+        map.insert(std::pair<std::string, block_ptr>(input->name,
                                                   input));
         return map;
     }

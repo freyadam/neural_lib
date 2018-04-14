@@ -13,7 +13,7 @@ namespace nl {
         if (op->outputs().size() != 1)
             throw InputException();
 
-        Block* input = op->outputs().begin()->second;
+        block_ptr input = op->outputs().begin()->second;
         
         // check that input is of correct dimension
         auto dims = input->dimensions();
@@ -23,7 +23,7 @@ namespace nl {
 
         // insert block and appropriate weight to vector
         InputPair ip;                
-        Block* weight = new Block(name + "_" + input->name + "_w", 1, 1, 1);
+        block_ptr weight = std::make_shared<Block>(name + "_" + input->name + "_w", 1, 1, 1);
         weight->data(0,0,0) = Generator::get();
         weight->trainable = true; // weights should be trained
 
@@ -31,28 +31,20 @@ namespace nl {
         ip.weight = weight;
         input_vector.push_back(ip);
 
-        // created weights need to be deleted in the end
-        owned.push_back(weight);                        
-
         // create threshold block
-        threshold = new Block(name + "_thr", 
-                              1,1,1);
+        threshold = std::make_shared<Block>(name + "_thr", 
+                                            1,1,1);
+
         // set original threshold
         threshold->data(0,0,0) = Generator::get();
         threshold->trainable = true; // weights should be trained
 
-        /// output becomes "owned" so it may be properly deleted
-        owned.push_back(threshold);
-
         // create output block
-        output = new Block(name + "_out",
-                           1, 1, 1);
-        /// output becomes "owned" so it may be properly deleted
-        owned.push_back(output);    
-
+        output = std::make_shared<Block>(name + "_out",
+                                         1, 1, 1);
     }
 
-    Neuron::Neuron(std::string name, std::string fn_name, const std::vector<Block *> & inputs):
+    Neuron::Neuron(std::string name, std::string fn_name, const std::vector<block_ptr> & inputs):
         Op(name), transfer_fn(TransferFns::get(fn_name)) {                        
             
         for (auto & input : inputs) {
@@ -71,36 +63,27 @@ namespace nl {
 
             // insert block and appropriate weight to vector
             InputPair ip;                
-            Block* weight = new Block(name + "_" + input->name + "_w", 1, 1, 1);
+            block_ptr weight = std::make_shared<Block>(name + "_" + input->name + "_w", 1, 1, 1);
             weight->data(0,0,0) = Generator::get();
             weight->trainable = true; // weights should be trained
             ip.input = input;
             ip.weight = weight;
             input_vector.push_back(ip);
-
-            // created weights need to be deleted in the end
-            owned.push_back(weight);
         }
 
         // create threshold block
-        threshold = new Block(name + "_thr", 
-                              1,1,1);
+        threshold = std::make_shared<Block>(name + "_thr", 
+                                                     1,1,1);
         // set original threshold
         threshold->data(0,0,0) = Generator::get();
         threshold->trainable = true; // threshold should be trained
-        
-        /// output becomes "owned" so it may be properly deleted
-        owned.push_back(threshold);
 
         // create output block
-        output = new Block(name + "_out",
+        output = std::make_shared<Block>(name + "_out",
                            1, 1, 1);
-
-        /// output becomes "owned" so it may be properly deleted
-        owned.push_back(output);           
     }
 
-    Neuron::Neuron(std::string name, std::string fn_name, Block* input):
+    Neuron::Neuron(std::string name, std::string fn_name, block_ptr input):
         Op(name), transfer_fn(TransferFns::get(fn_name)) {                        
 
         if (input == nullptr)
@@ -114,7 +97,7 @@ namespace nl {
 
         // insert block and appropriate weight to vector
         InputPair ip;                
-        Block* weight = new Block(name + "_" + input->name + "_w", 1, 1, 1);
+        block_ptr weight = std::make_shared<Block>(name + "_" + input->name + "_w", 1, 1, 1);
         weight->data(0,0,0) = Generator::get();
         weight->trainable = true;
 
@@ -122,25 +105,16 @@ namespace nl {
         ip.weight = weight;
         input_vector.push_back(ip);
 
-        // created weights need to be deleted in the end
-        owned.push_back(weight);                        
-
         // create threshold block
-        threshold = new Block(name + "_thr", 
+        threshold = std::make_shared<Block>(name + "_thr", 
                               1,1,1);
         // set original threshold
         threshold->data(0,0,0) = Generator::get();
         threshold->trainable = true;
-        
-        /// output becomes "owned" so it may be properly deleted
-        owned.push_back(threshold);
 
         // create output block
-        output = new Block(name + "_out",
-                           1, 1, 1);
-        /// output becomes "owned" so it may be properly deleted
-        owned.push_back(output);    
-        
+        output = std::make_shared<Block>(name + "_out",
+                           1, 1, 1);        
     }
 
     void Neuron::forward() {
@@ -174,7 +148,7 @@ namespace nl {
     block_map Neuron::outputs() {
         block_map map;
 
-        map.insert(std::pair<std::string, Block*>(output->name,
+        map.insert(std::pair<std::string, block_ptr>(output->name,
                                                   output));
 
         return map;

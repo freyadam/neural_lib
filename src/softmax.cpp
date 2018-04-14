@@ -14,12 +14,12 @@ namespace nl {
         create_output(input);
     }
 
-    Softmax::Softmax(std::string name, Block* input):
+    Softmax::Softmax(std::string name, block_ptr input):
         Op(name), input(input) {
         create_output(input);
     }
 
-    void Softmax::create_output(Block* input) {
+    void Softmax::create_output(block_ptr input) {
 
         // check dimensions
         auto dims = input->dimensions();
@@ -27,10 +27,7 @@ namespace nl {
             throw DimensionException();
 
         // create output block
-        output = new Block(name + "_out", dims[0], dims[1], dims[2]);
-
-        /// output becomes "owned" so it may be properly deleted
-        owned.push_back(output);    
+        output = std::make_shared<nl::Block>(name + "_out", dims[0], dims[1], dims[2]);
 
     }
 
@@ -82,7 +79,7 @@ namespace nl {
     block_map Softmax::outputs() {
         block_map map;
 
-        map.insert(std::pair<std::string, Block*>(output->name,
+        map.insert(std::pair<std::string, block_ptr>(output->name,
                                                   output));
         return map;
     }
@@ -90,7 +87,7 @@ namespace nl {
     block_map Softmax::inputs() {
         block_map map;
 
-        map.insert(std::pair<std::string, Block*>(input->name,
+        map.insert(std::pair<std::string, block_ptr>(input->name,
                                                   input));
         return map;
     }

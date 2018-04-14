@@ -11,28 +11,28 @@
 // blocks need to be of correct dimension
 TEST(NeuronTest, BlocksCorrectDim) {
 
-    nl::Block b1("b1", 2, 1, 1);
-    nl::Block b2("b2", 1, 2, 1);
-    nl::Block b3("b3", 1, 1, 2);
+    nl::block_ptr b1 = std::make_shared<nl::Block>("b1", 2, 1, 1);
+    nl::block_ptr b2 = std::make_shared<nl::Block>("b2", 1, 2, 1);
+    nl::block_ptr b3 = std::make_shared<nl::Block>("b3", 1, 1, 2);
     
-    EXPECT_THROW(nl::Neuron n1("neuron", "relu", &b1), nl::DimensionException);
-    EXPECT_THROW(nl::Neuron n2("neuron", "relu", &b2), nl::DimensionException);
-    EXPECT_THROW(nl::Neuron n3("neuron", "relu", &b3), nl::DimensionException);
+    EXPECT_THROW(nl::Neuron n1("neuron", "relu", b1), nl::DimensionException);
+    EXPECT_THROW(nl::Neuron n2("neuron", "relu", b2), nl::DimensionException);
+    EXPECT_THROW(nl::Neuron n3("neuron", "relu", b3), nl::DimensionException);
 }
 
 // existing output of correct dim
 TEST(NeuronTest, OutputCorrectDim) {
     
-    nl::Block b1("b1", 1, 1, 1);
-    nl::Block b2("b2", 1, 1, 1);
-    std::vector<nl::Block*> inputs = {&b1, &b2};
+    nl::block_ptr b1 = std::make_shared<nl::Block>("b1", 1, 1, 1);
+    nl::block_ptr b2 = std::make_shared<nl::Block>("b2", 1, 1, 1);
+    std::vector<nl::block_ptr> inputs = {b1, b2};
 
     nl::Neuron n("n", "sigmoid", inputs);
 
     EXPECT_EQ(n.outputs().size(), 1);
     
     // get output block of neuron
-    nl::Block* out = n.outputs()["n_out"];
+    nl::block_ptr out = n.outputs()["n_out"];
 
     EXPECT_EQ(out->dimensions().size(), 3);
     EXPECT_EQ(out->dimensions()[0], 1);
@@ -44,30 +44,30 @@ TEST(NeuronTest, OutputCorrectDim) {
 TEST(NeuronTest, Forward) {
 
     
-    nl::Block b1("b1", 1, 1, 1);
-    nl::Block b2("b2", 1, 1, 1);
-    nl::Neuron n("n", "linear", &b1, &b2);
+    nl::block_ptr b1 = std::make_shared<nl::Block>("b1", 1, 1, 1);
+    nl::block_ptr b2 = std::make_shared<nl::Block>("b2", 1, 1, 1);
+    nl::Neuron n("n", "linear", b1, b2);
 
-    b1.data(0,0,0) = 0;
-    b2.data(0,0,0) = 0;
+    b1->data(0,0,0) = 0;
+    b2->data(0,0,0) = 0;
     n.forward();
 
     float threshold = n.outputs()["n_out"]->data(0,0,0);
 
-    b1.data(0,0,0) = 1;
-    b2.data(0,0,0) = 0;
+    b1->data(0,0,0) = 1;
+    b2->data(0,0,0) = 0;
     n.forward();
 
     float w1 = n.outputs()["n_out"]->data(0,0,0) - threshold;
 
-    b1.data(0,0,0) = 0;
-    b2.data(0,0,0) = 1;
+    b1->data(0,0,0) = 0;
+    b2->data(0,0,0) = 1;
     n.forward();
 
     float w2 = n.outputs()["n_out"]->data(0,0,0) - threshold;
 
-    b1.data(0,0,0) = 0.3;
-    b2.data(0,0,0) = -1.2;
+    b1->data(0,0,0) = 0.3;
+    b2->data(0,0,0) = -1.2;
     n.forward();
 
     EXPECT_NEAR(n.outputs()["n_out"]->data(0,0,0), 
@@ -78,46 +78,46 @@ TEST(NeuronTest, Forward) {
 // correct backward gradient outputs
 TEST(NeuronTest, Backward) {
     
-    nl::Block b1("b1", 1, 1, 1);
-    nl::Block b2("b2", 1, 1, 1);
-    nl::Neuron n("n", "linear", &b1, &b2);
+    nl::block_ptr b1 = std::make_shared<nl::Block>("b1", 1, 1, 1);
+    nl::block_ptr b2 = std::make_shared<nl::Block>("b2", 1, 1, 1);
+    nl::Neuron n("n", "linear", b1, b2);
 
-    b1.data(0,0,0) = 0;
-    b2.data(0,0,0) = 0;
+    b1->data(0,0,0) = 0;
+    b2->data(0,0,0) = 0;
     n.forward();
 
     float threshold = n.outputs()["n_out"]->data(0,0,0);
 
-    b1.data(0,0,0) = 1;
-    b2.data(0,0,0) = 0;
+    b1->data(0,0,0) = 1;
+    b2->data(0,0,0) = 0;
     n.forward();
 
     float w1 = n.outputs()["n_out"]->data(0,0,0) - threshold;
 
-    b1.data(0,0,0) = 0;
-    b2.data(0,0,0) = 1;
+    b1->data(0,0,0) = 0;
+    b2->data(0,0,0) = 1;
     n.forward();
 
     float w2 = n.outputs()["n_out"]->data(0,0,0) - threshold;    
 
     float grad_on_output = 0.3;
 
-    b1.zero_grad();
-    b2.zero_grad();
+    b1->zero_grad();
+    b2->zero_grad();
 
     n.outputs()["n_out"]->grad(0,0,0) = grad_on_output;
     n.backward();
 
-    EXPECT_NEAR(b1.grad(0,0,0), grad_on_output * w1, 1e-5);
-    EXPECT_NEAR(b2.grad(0,0,0), grad_on_output * w2, 1e-5);
+    EXPECT_NEAR(b1->grad(0,0,0), grad_on_output * w1, 1e-5);
+    EXPECT_NEAR(b2->grad(0,0,0), grad_on_output * w2, 1e-5);
 }
 
 // correct outputs() 
 TEST(NeuronTest, OutputMethodElements) {
 
-    nl::Block b1("b1", 1, 1, 1);
-    nl::Block b2("b2", 1, 1, 1);
-    nl::Neuron n("afawgsg", "softplus", &b1, &b2);
+    nl::block_ptr b1 = std::make_shared<nl::Block>("b1", 1, 1, 1);
+    nl::block_ptr b2 = std::make_shared<nl::Block>("b2", 1, 1, 1);
+    nl::Neuron n("afawgsg", "softplus", b1, b2);
 
     nl::block_map map = n.outputs();
 
@@ -128,9 +128,9 @@ TEST(NeuronTest, OutputMethodElements) {
 // correct inputs()
 TEST(NeuronTest, InputMethodElements) {
 
-    nl::Block b1("b1", 1, 1, 1);
-    nl::Block b2("b2", 1, 1, 1);
-    nl::Neuron n("vcx", "softplus", &b1, &b2);
+    nl::block_ptr b1 = std::make_shared<nl::Block>("b1", 1, 1, 1);
+    nl::block_ptr b2 = std::make_shared<nl::Block>("b2", 1, 1, 1);
+    nl::Neuron n("vcx", "softplus", b1, b2);
 
     nl::block_map map = n.inputs();
 
