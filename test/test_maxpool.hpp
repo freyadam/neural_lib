@@ -8,7 +8,7 @@ TEST(MaxPoolTest, Constructor) {
 
     nl::block_ptr b = std::make_shared<nl::Block>("b", 1, 1, 1);
     nl::Neuron n("n", "relu", b);
-    nl::MaxPool p("pool", &n, 2, 1);
+    nl::MaxPool p("pool", n, 2, 1);
 
     // check that max pool has correct input block
     EXPECT_EQ(p.inputs().begin()->second->name, "n_out");

@@ -197,7 +197,7 @@ TEST(SerializationTest, Net) {
 
     nl::block_ptr b = std::make_shared<nl::Block>("b", 1, 1, 1);
     nl::Neuron n1("n1", "linear", b);
-    nl::Neuron n2("n2", "relu", &n1);
+    nl::Neuron n2("n2", "relu", n1);
 
     // set weights
     nl::block_ptr thr1 = n1.inputs()["n1_thr"];

@@ -3,16 +3,9 @@
 
 namespace nl {
 
-    Dense::Dense(std::string name, std::string fn_name, Op* op, 
+    Dense::Dense(std::string name, std::string fn_name, block_ptr input, 
                  uint16_t depth, uint16_t width, uint16_t height):
-        Op(name), transfer_fn(TransferFns::get(fn_name)) {
-
-        // check that input op has only a single output
-        if (op->outputs().size() != 1)
-            throw InputException();
-
-        // get output of op
-        input = op->outputs().begin()->second;                
+        Op(name), input(input), transfer_fn(TransferFns::get(fn_name)) {
 
         // 3-dim block
         auto input_dims = input->dimensions();
@@ -23,9 +16,16 @@ namespace nl {
                       depth, width, height);
     }
 
-    Dense::Dense(std::string name, std::string fn_name, block_ptr input, 
+    Dense::Dense(std::string name, std::string fn_name, Op & op, 
                  uint16_t depth, uint16_t width, uint16_t height):
-        Op(name), input(input), transfer_fn(TransferFns::get(fn_name)) {
+        Op(name), transfer_fn(TransferFns::get(fn_name)) {
+
+        // check that input op has only a single output
+        if (op.outputs().size() != 1)
+            throw InputException();
+
+        // get output of op
+        input = op.outputs().begin()->second;                
 
         // 3-dim block
         auto input_dims = input->dimensions();

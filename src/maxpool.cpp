@@ -32,18 +32,15 @@ namespace nl {
 
     }
 
-    MaxPool::MaxPool(std::string name, Op* op, 
+    MaxPool::MaxPool(std::string name, Op & op, 
                      uint16_t window_size, uint16_t padding_size):
         Op(name), window_size(window_size), padding_size(padding_size){
 
-        if (op == nullptr)
-            throw nl::InputException();
-
-        if (op->outputs().size() != 1)
+        if (op.outputs().size() != 1)
             throw nl::InputException();
 
         // take the only output of op as input of this max pool layer
-        input = op->outputs().begin()->second;
+        input = op.outputs().begin()->second;
             
         if (input == nullptr)
             throw nl::InputException();

@@ -84,17 +84,17 @@ int main(int argc, char *argv[])
     // two separate blocks
     // output of sep_corr is used as desired output of network
     // output of sep_input is used as input of network
-    nl::Dense sep_corr("correct", "linear", &r,
+    nl::Dense sep_corr("correct", "linear", r,
                        1, 1, 1);
-    nl::Dense sep_input("input", "linear", &r,
+    nl::Dense sep_input("input", "linear", r,
                         1, 1, 2);
     // modify separator weights to really just divide data into 2 blocks
     modify_sep_weights(sep_corr, sep_input);
 
     // create network layers
-    nl::Dense l1("l1", "relu", &sep_input,
+    nl::Dense l1("l1", "relu", sep_input,
                       1, 1, 2);
-    nl::Dense l2("l2", "relu", &l1,
+    nl::Dense l2("l2", "relu", l1,
                       1, 1, 1);
 
     // ----- create network and put individual ops inside -----

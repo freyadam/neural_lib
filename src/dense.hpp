@@ -21,22 +21,22 @@ namespace nl {
         /// Constructor.
         /// @param name name of the resulting dense layer
         /// @param fn_name name of used transfer function as defined in TransferFns
-        /// @param op previous operation with only a single one output block of
-        /// correct dimension
-        /// @param depth depth of output block
-        /// @param width width of output block
-        /// @param height height of output block
-        Dense(std::string name, std::string fn_name, Op* op, 
-              uint16_t depth, uint16_t width, uint16_t height);
-
-        /// Constructor.
-        /// @param name name of the resulting dense layer
-        /// @param fn_name name of used transfer function as defined in TransferFns
         /// @param input input block
         /// @param depth depth of output block
         /// @param width width of output block
         /// @param height height of output block
         Dense(std::string name, std::string fn_name, block_ptr input, 
+              uint16_t depth, uint16_t width, uint16_t height);
+
+        /// Constructor.
+        /// @param name name of the resulting dense layer
+        /// @param fn_name name of used transfer function as defined in TransferFns
+        /// @param op previous operation with only a single one output block of
+        /// correct dimension
+        /// @param depth depth of output block
+        /// @param width width of output block
+        /// @param height height of output block
+        Dense(std::string name, std::string fn_name, Op & op, 
               uint16_t depth, uint16_t width, uint16_t height);
 
         virtual void forward();

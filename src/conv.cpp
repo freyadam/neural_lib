@@ -14,20 +14,17 @@ namespace nl {
 
     }
 
-    Conv::Conv(std::string name, std::string fn_name, Op* op, 
+    Conv::Conv(std::string name, std::string fn_name, Op & op, 
                uint16_t output_depth,
                uint16_t window_size, uint16_t padding_size, uint16_t stride):
         Op(name), 
         window_size(window_size), padding_size(padding_size), stride(stride), 
         transfer_fn(TransferFns::get(fn_name)) {
         
-        if (op == nullptr)
+        if (op.outputs().size() != 1)
             throw nl::InputException();
 
-        if (op->outputs().size() != 1)
-            throw nl::InputException();
-
-        input = op->outputs().begin()->second;
+        input = op.outputs().begin()->second;
         init(output_depth);
 
     }

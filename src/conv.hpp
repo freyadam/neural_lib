@@ -45,7 +45,7 @@ namespace nl {
         /// @param padding_size how many layers of zeros should 
         /// be appended to input block
         /// @param stride by how much does kernel move
-        Conv(std::string name, std::string fn_name, Op* op, 
+        Conv(std::string name, std::string fn_name, Op & op, 
              uint16_t output_depth,
              uint16_t window_size, uint16_t padding_size=0, uint16_t stride=1);
 

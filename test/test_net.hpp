@@ -30,7 +30,7 @@ TEST(NetTest, InputsOutputs) {
 
     nl::block_ptr b1 = std::make_shared<nl::Block>("b1", 1, 1, 1);
     nl::Neuron n1("n1", "relu", b1);
-    nl::Neuron n2("n2", "relu", &n1);
+    nl::Neuron n2("n2", "relu", n1);
 
     net.add(&n1);
     net.add(&n2);
@@ -58,7 +58,7 @@ TEST(NetTest, Ordering) {
 
     nl::block_ptr b1 = std::make_shared<nl::Block>("b1", 1, 1, 1);
     nl::Neuron n1("n1", "relu", b1);
-    nl::Neuron n2("n2", "relu", &n1);
+    nl::Neuron n2("n2", "relu", n1);
 
     net.add(&n1);
     net.add(&n2);

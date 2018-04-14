@@ -6,11 +6,6 @@
 
 TEST(ConvTest, Constructor) {
 
-    nl::Op* op_ptr = NULL;
-    EXPECT_THROW(nl::Conv("conv", "relu", op_ptr, 
-                          1, 2),
-                 nl::InputException);    
-
     nl::block_ptr b = std::make_shared<nl::Block>("b", 1, 3, 2);
     nl::block_ptr b2 = std::make_shared<nl::Block>("b2", 1, 4, 4);
 

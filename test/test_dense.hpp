@@ -11,7 +11,7 @@ TEST(TestDense, Constructors) {
     
     nl::block_ptr b = std::make_shared<nl::Block>("b", 1, 2, 2);    
     nl::Dense d1("dense1", "relu", b, 2, 2, 2);
-    nl::Dense d2("dense2", "linear", &d1, 1, 1, 1);    
+    nl::Dense d2("dense2", "linear", d1, 1, 1, 1);    
     
     // d1 
     EXPECT_STREQ(d1.name.c_str(), "dense1");
@@ -119,7 +119,7 @@ TEST(TestDense, InputOutput) {
     
     nl::block_ptr b = std::make_shared<nl::Block>("b", 1, 2, 2);    
     nl::Dense d1("d1", "relu", b, 2, 2, 2);
-    nl::Dense d2("d2", "linear", &d1, 1, 1, 1);    
+    nl::Dense d2("d2", "linear", d1, 1, 1, 1);    
     
     // d1 
     EXPECT_EQ(d1.inputs().size(), 3);

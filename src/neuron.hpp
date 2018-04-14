@@ -39,7 +39,7 @@ namespace nl {
         /// @param fn_name name of used transfer function as defined in TransferFns
         /// @param op previous operation with only a single one output block of
         /// correct dimension
-        Neuron(std::string name, std::string fn_name, Op* op);
+        Neuron(std::string name, std::string fn_name, Op & op);
 
         /// Constructor.
         /// @param name name of the resulting neuron
@@ -126,7 +126,7 @@ namespace nl {
         TransferFn* transfer_fn;
     };
 
-
+ 
 } // namespace nl
 
 #endif // NEURAL_LIB_NEURON_H

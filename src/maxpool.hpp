@@ -39,7 +39,7 @@ namespace nl {
         /// @param window_size length of the perception rectangle
         /// @param padding_size number of min. values added to input block
         /// 
-        MaxPool(std::string name, Op* op, 
+        MaxPool(std::string name, Op & op, 
                 uint16_t window_size, uint16_t padding_size=0);
 
         virtual void forward();

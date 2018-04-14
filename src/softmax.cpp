@@ -3,14 +3,14 @@
 
 namespace nl {
 
-   Softmax:: Softmax(std::string name, Op* op):
+   Softmax:: Softmax(std::string name, Op & op):
         Op(name) {
 
         // check that previous operation has exactly a single output block
-        if (op->outputs().size() != 1)
+        if (op.outputs().size() != 1)
             throw InputException();
 
-        input = op->outputs().begin()->second;
+        input = op.outputs().begin()->second;
         create_output(input);
     }
 
